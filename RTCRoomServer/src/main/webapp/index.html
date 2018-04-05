@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>SNQueryServer</title>
+    <link rel="stylesheet" href="css/framework7.ios.min.css"/>
+    <link rel="stylesheet" href="css/my-app.css"/>
+  </head>
+  <body>
+    <div class="statusbar-overlay"></div>
+
+
+    <div class="login-screen" >
+      <div class="view">
+        <div class="page">
+          <div class="page-content login-screen-content">
+            <div class="login-screen-title">登陆</div>
+            <form id="login-form">
+              <div class="list-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">用户名</div>
+                      <div class="item-input">
+                        <input type="text" name="loginName" placeholder="用户名">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">密码</div>
+                      <div class="item-input">
+                        <input type="password" name="userPass" placeholder="密码">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <a href="#" class="item-link list-button login-btn" >登陆</a>
+                  </li>
+                </ul>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="views tabs toolbar-through">
+      <div id="view-1" class="view view-main tab active">
+
+        <script type="text/template7" id="view1fees">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="center sliding" style="margin: 0 auto;">功能开关</div>
+              <!--<div class="right"><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a></div>-->
+            </div>
+          </div>
+          <div class="pages navbar-through">
+            <div data-page="fees" class="page">
+              <div class="page-content">
+                <div class="list-block">
+                  <ul>{{#each fees}}
+                      <li>
+                        <div class="item-content" >
+                          <div class="item-media"><i class="icon icon-form-toggle"></i></div>
+                          <div class="item-inner" >
+                            <div class="item-title label" style="width: auto;">{{name}}</div>
+                            <div class="item-input" style="width: auto;">
+                              <label class="label-switch" >
+                                  <input type="checkbox" data-cc="{{type}}" onchange="changeSwitch(event)" {{#if iSwitch}}checked{{/if}} />
+                                <div class="checkbox"></div>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </li>{{/each}}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </script>
+      </div>
+
+
+      <div id="view-2" class="view view-main tab">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="center sliding">功能明细</div>
+          </div>
+        </div>
+        <div class="pages navbar-fixed">
+          <div data-page="index-2" class="page">
+            <div class="navbar">
+              <div class="navbar-inner">
+                <div class="center"></div>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="content-block">
+                <p>这里修改功能按钮和价格</p>
+              </div>
+              <div class="list-block">
+                <ul>
+                  <li><a href="fees.html" class="item-link" data-context-name="fees">
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">按钮功能修改</div>
+                      </div>
+                    </div></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div id="view-3" class="view view-main tab">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="center sliding">说明书</div>
+          </div>
+        </div>
+
+
+        <div class="pages navbar-fixed">
+          <div data-page="index-3" class="page">
+            <div class="page-content">
+              <div class="list-block" style="text-align: center;margin: 20px auto;">
+
+                  <input type="file" name="insfile" id="insfile" style="margin: 20px auto;">
+                  <a href="#" class="button active" onclick="uploadimg()">上传</a>
+                  <img id="insShow" src="" style="width: 100%;margin-top: 20px;" border="none">
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div id="view-4" class="view view-main tab">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="center sliding">用户中心</div>
+          </div>
+        </div>
+        <div class="pages navbar-fixed">
+          <div data-page="index-4" class="page">
+            <div class="page-content">
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title" id="userTitle"></div>
+                      </div>
+                    </div></li>
+                  <li><a href="#" onclick="editPwd()" class="item-link">
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">修改密码</div>
+                      </div>
+                    </div></a></li>
+                  <li><a href="#" onclick="loginOut()" class="item-link">
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">退出</div>
+                      </div>
+                    </div></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom Tabbar-->
+      <div class="toolbar tabbar tabbar-labels">
+        <div class="toolbar-inner">
+          <a href="#view-1" class="tab-link active"> <i class="icon tabbar-demo-icon-1"></i><span class="tabbar-label">开关</span></a>
+          <a href="#view-2" class="tab-link"><i class="icon tabbar-demo-icon-2"></i><span class="tabbar-label">功能</span></a>
+          <a href="#view-3" class="tab-link"> <i class="icon tabbar-demo-icon-3"></i><span class="tabbar-label">说明书</span></a>
+          <a href="#view-4" class="tab-link"> <i class="icon tabbar-demo-icon-4"></i><span class="tabbar-label">用户</span></a></div>
+      </div>
+    </div>
+    <!-- Path to Framework7 Library JS-->
+    <script type="text/javascript" src="js/framework7.min.js"></script>
+    <!-- Path to your app js-->
+    <script type="text/javascript" src="js/my-app.js"></script>
+  </body>
+</html>
