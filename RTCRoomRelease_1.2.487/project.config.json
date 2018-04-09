@@ -1,10 +1,5 @@
 {
-	"client": "./wxlite",
-	"svr": "./server",
-	"miniprogramRoot": "./wxlite",
-	"qcloudRoot": "./server",
-	"appid": "wx30dde37837561559",
-	"projectname": "rtcroom1.2",
+	"description": "项目配置文件。",
 	"setting": {
 		"urlCheck": true,
 		"es6": true,
@@ -12,6 +7,22 @@
 		"minified": true,
 		"newFeature": true
 	},
-	"libVersion": "1.7.1",
-	"condition": {}
+	"compileType": "miniprogram",
+	"libVersion": "1.9.94",
+	"appid": "wx1365d5f200558a90",
+	"projectname": "实时视频",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": []
+		}
+	}
 }
