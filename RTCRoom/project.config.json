@@ -11,7 +11,6 @@
 	"libVersion": "1.9.94",
 	"appid": "wx30dde37837561559",
 	"projectname": "RTCRoom",
-	"isGameTourist": false,
 	"condition": {
 		"search": {
 			"current": -1,
@@ -19,10 +18,6 @@
 		},
 		"conversation": {
 			"current": -1,
-			"list": []
-		},
-		"game": {
-			"currentL": -1,
 			"list": []
 		},
 		"miniprogram": {

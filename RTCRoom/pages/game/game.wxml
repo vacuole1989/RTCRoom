@@ -1,0 +1,3 @@
+<!--pages/game/game.wxml-->
+
+<view><input placeholder="设置 > 通用 > 关于本机" bindinput="inputSN" /></view>
