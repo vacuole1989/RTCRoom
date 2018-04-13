@@ -23,7 +23,7 @@ public class QueryController {
     private RestTemplate restTemplate;
 
     @RequestMapping("/onLogin")
-    public Map onLogin(@RequestParam String code,) {
+    public Map onLogin(@RequestParam String code) {
 
         System.out.println(code);
         Map map = restTemplate.getForObject("{sessionkey}?appid={APPID}&secret={SECRET}&js_code={JSCODE}&grant_type=authorization_code", Map.class, sessionKey, APPID, SECRET, code);
