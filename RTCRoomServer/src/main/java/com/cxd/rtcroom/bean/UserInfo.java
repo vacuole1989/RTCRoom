@@ -1,19 +1,25 @@
 package com.cxd.rtcroom.bean;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
  * @author cxd
  */
+@Entity
 public class UserInfo implements Serializable {
-
-
+    @Id
+    private String openId;
+    private String sessionKey;
     private String nickName;
     private String avatarUrl;
     private String gender;
     private String province;
     private String city;
     private String country;
+    private String lastLoginTime;
+    private boolean inited;
 
     public String getNickName() {
         return nickName;
@@ -67,5 +73,37 @@ public class UserInfo implements Serializable {
     public UserInfo setCountry(String country) {
         this.country = country;
         return this;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(String lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public boolean isInited() {
+        return inited;
+    }
+
+    public void setInited(boolean inited) {
+        this.inited = inited;
     }
 }

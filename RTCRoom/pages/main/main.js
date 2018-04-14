@@ -1,5 +1,5 @@
 // pages/main/main.js
-
+const app = getApp()
 Page({
 
   /**
@@ -50,6 +50,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.info(app.globalData)
     console.log("onLoad");
     var defaultStyle = "weui_btn weui_btn_mini weui_btn_plain_primary";
     for(var i=0;i<23;i++){

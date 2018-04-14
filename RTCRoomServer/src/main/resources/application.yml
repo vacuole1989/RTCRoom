@@ -3,6 +3,6 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://localhost:3306/rtcroom
+    url: jdbc:mysql://121.40.92.169:3306/rtcroom
     username: root
     password: '!QAZ2wsx'
