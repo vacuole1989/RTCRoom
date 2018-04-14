@@ -2,6 +2,7 @@ package com.cxd.rtcroom.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -20,6 +21,8 @@ public class UserInfo implements Serializable {
     private String country;
     private String lastLoginTime;
     private boolean inited;
+    @Transient
+    private String pushUrl;
 
     public String getNickName() {
         return nickName;
@@ -105,5 +108,13 @@ public class UserInfo implements Serializable {
 
     public void setInited(boolean inited) {
         this.inited = inited;
+    }
+
+    public String getPushUrl() {
+        return pushUrl;
+    }
+
+    public void setPushUrl(String pushUrl) {
+        this.pushUrl = pushUrl;
     }
 }

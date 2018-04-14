@@ -52,12 +52,16 @@ public class QueryController {
             userInfo.setOpenId(openid);
             userInfo.setLastLoginTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
 
-
-            userInfoRepository.save(userInfo);
             Long txTime = DateUtil.format(DateUtil.format(new Date(), "yyyy-MM-dd") + " 23:59:59", "yyyy-MM-dd HH:mm:ss").getTime() / 1000;
             String pushUrl = "rtmp://" + PUSH_BIZ_ID + ".livepush.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId() + "?bizid=" + PUSH_BIZ_ID + "&" + getSafeUrl(PUSH_KEY, PUSH_BIZ_ID + "_" + userInfo.getOpenId(), txTime);
+
+
+
+
+            userInfoRepository.save(userInfo);
+            userInfo.setPushUrl(pushUrl);
             System.out.println(pushUrl);
-            return new JSONResult(true, "用户登陆成功", pushUrl);
+            return new JSONResult(true, "用户登陆成功", userInfo);
         } else {
             return new JSONResult(false, "用户登录失败");
         }

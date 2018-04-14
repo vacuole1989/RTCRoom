@@ -1,5 +1,6 @@
 // pages/push/push.js
-const app = getApp()
+const app = getApp();
+var config = require('../../config.js');
 Page({
 
   /**
@@ -12,6 +13,7 @@ Page({
     cameraContext: {},
     videoContext: {},
     pushUrl: "",
+    pushUrl2: "",
     showHDTips: false, //显示清晰度弹窗
     mode: "RTC",
     muted: false,
@@ -23,7 +25,8 @@ Page({
     hide: false,
     debug: false,
     playUrl: "",
-    userInfo: {}
+    userInfo: {},
+    hasUserInfo: false
   },
   onGameClick: function () {
     wx.navigateTo({
@@ -32,9 +35,9 @@ Page({
   },
   onPushClick: function () {
     var _this = this;
-    console.log("onPushClick", this.data);
-    this.setData({
-      pushUrl: app.globalData.pushUrl,
+    console.info(_this.data.pushUrl2)
+    _this.setData({
+      pushUrl: _this.data.pushUrl2,
       playUrl: ""
     })
     this.setData({
@@ -42,11 +45,9 @@ Page({
     })
     if (this.data.playing) {
       this.data.cameraContext.start();
-      this.data.videoContext.play();
       console.log("camera start");
     } else {
       this.data.cameraContext.stop();
-      this.data.videoContext.stop();
       console.log("camera stop");
     }
   },
@@ -69,19 +70,60 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var _this = this;
+    if (app.globalData.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true
+      })
+    } else {
+      // 在没有 open-type=getUserInfo 版本的兼容处理
+      wx.getUserInfo({
+        success: res => {
+          app.globalData.userInfo = res.userInfo
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true
+          })
+        }
+      })
+    }
 
+
+
+
+    // if (!app.globalData.inited) {
+    //   wx.redirectTo({
+    //     url: '../main/main',
+    //   })
+    // }
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
-
-
+    var _this = this;
+    wx.login({
+      success: function (res) {
+        if (res.code) {
+          //发起网络请求
+          wx.request({
+            method: 'POST',
+            url: config.url + '/onLogin?code=' + res.code,
+            data: _this.data.userInfo,
+            success: function (retdata) {
+              console.info(retdata);
+              _this.data.pushUrl2 = retdata.data.data.pushUrl;
+                _this.createContext();
+                _this.onPushClick();
+            }
+          })
+        } else {
+          console.log('登录失败！' + res.errMsg)
+        }
+      }
+    });
     
-    console.log("onLoad onReady");
-    this.createContext();
-    this.onPushClick();
     wx.setKeepScreenOn({
       keepScreenOn: true,
     })
@@ -111,6 +153,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
+
     console.log("onLoad onUnload");
     this.stop();
 

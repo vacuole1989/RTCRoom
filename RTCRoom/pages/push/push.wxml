@@ -33,9 +33,16 @@
             debug="{{debug}}"
             hidden="{{hide}}"
             bindstatechange="onPushEvent">
-                   <cover-view class='bottom_box'>
-            <cover-image class="bottom_button gamepad" src="../Resources/wifi.png" bindtap='onGameClick'></cover-image>
+                   <cover-view class='cover_box'>
+            <cover-image class="center_bottom_btn" src="../Resources/wifi.png" bindtap='onGameClick'></cover-image>
+            <cover-image class="right_top_btn" src="../Resources/gamepad.png" ></cover-image>
+            <cover-image class="left_bottom_btn" src="../Resources/chat.png" ></cover-image>
+            <cover-image class="right_bottom_btn" src="../Resources/dots.png" ></cover-image>
         </cover-view>
+         
     </live-pusher> 
 
 </view>
+
+
+
