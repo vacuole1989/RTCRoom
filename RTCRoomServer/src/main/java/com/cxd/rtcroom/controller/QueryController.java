@@ -70,7 +70,6 @@ public class QueryController {
 
 
 
-
     private static String getSafeUrl(String key, String streamId, long txTime) {
         String input = new StringBuilder().
                 append(key).

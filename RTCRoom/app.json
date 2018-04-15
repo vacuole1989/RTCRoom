@@ -3,7 +3,8 @@
     "pages/push/push",
     "pages/main/main",
     "pages/game/game",
-    "pages/more/more"
+    "pages/more/more",
+    "pages/person/person"
   ],
   "networkTimeout": {
     "request": 60000
@@ -12,7 +13,7 @@
     "backgroundColor": "#888",
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#000",
-    "navigationBarTitleText": "无界时代",
+    "navigationBarTitleText": "无介时代",
     "navigationBarTextStyle": "#fff"
   }
 }

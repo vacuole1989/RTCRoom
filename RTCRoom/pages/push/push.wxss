@@ -18,6 +18,14 @@
   top: 20rpx;
 }
 
+.left_top_btn {
+  position: absolute;
+  width: 90rpx;
+  height: 90rpx;
+  left: 20rpx;
+  top: 20rpx;
+}
+
 .left_bottom_btn {
   position: absolute;
   width: 90rpx;
@@ -122,4 +130,21 @@
 .logo {
   width: 160rpx;
   height: 44rpx;
+}
+
+.cover-input{
+  position: relative;
+  width: 65%;
+  height: 80rpx;
+  border: 4rpx solid #ffffff;
+  border-radius: 40rpx;
+  margin: 0 auto;
+  margin-top: 20rpx;
+}
+.search-icon{
+  position: absolute;
+  width: 60rpx;
+  height: 60rpx;
+  left: 10rpx;
+  top:10rpx;
 }
