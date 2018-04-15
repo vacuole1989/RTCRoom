@@ -1,0 +1,34 @@
+<!--pages/push/push.wxml-->
+<view style="width:100%;height: 100%; background-color: black;">
+<live-player
+            style=""
+            id="video-livePlayer"
+            mode="RTC"
+            orientation="{{orientation}}"
+            autoplay="true"
+            object-fit="{{objectFit}}"
+            min-cache="1"
+            max-cache="3"
+            src="{{playUrl}}"
+            debug="{{debug}}">
+    </live-player> 
+<live-pusher
+            style=""
+            id="camera-push"
+            mode="RTC"
+            autopush="true"
+            orientation="{{orientation}}"
+            beauty="{{beauty}}"
+            whiteness="{{whiteness}}"
+            background-mute="{{backgroundMute}}"
+            url="{{pushUrl}}"
+            enable-camera="{{enableCamera}}"
+            debug="{{debug}}"
+            hidden="{{hide}}"
+            bindstatechange="onPushEvent">         
+    </live-pusher>
+   
+</view>
+
+
+
