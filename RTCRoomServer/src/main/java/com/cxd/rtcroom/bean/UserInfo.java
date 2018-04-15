@@ -23,6 +23,8 @@ public class UserInfo implements Serializable {
     private boolean inited;
     @Transient
     private String pushUrl;
+    @Transient
+    private String playUrl;
 
     public String getNickName() {
         return nickName;
@@ -116,5 +118,14 @@ public class UserInfo implements Serializable {
 
     public void setPushUrl(String pushUrl) {
         this.pushUrl = pushUrl;
+    }
+
+    public String getPlayUrl() {
+        return playUrl;
+    }
+
+    public UserInfo setPlayUrl(String playUrl) {
+        this.playUrl = playUrl;
+        return this;
     }
 }

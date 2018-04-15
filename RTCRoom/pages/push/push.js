@@ -33,6 +33,16 @@ Page({
       url: "../game/game",
     });
   },
+  onPersonClick: function () {
+    wx.navigateTo({
+      url: "../person/person",
+    });
+  },
+  onChatClick: function () {
+    wx.navigateTo({
+      url: "../chat/chat",
+    });
+  },
   onPushClick: function () {
     var _this = this;
     console.info(_this.data.pushUrl2)

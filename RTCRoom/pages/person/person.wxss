@@ -1,1 +1,21 @@
 /* pages/person/person.wxss */
+page{
+  background-color: gray;
+}
+.person-view {
+  text-align: center;
+}
+
+.headImg {
+  margin: 0 auto;
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  margin-top:20rpx; 
+}
+.textli{
+  font-size: 40rpx;
+  line-height: 100rpx;
+  margin-top: 50rpx;
+  padding:0 100rpx; 
+}

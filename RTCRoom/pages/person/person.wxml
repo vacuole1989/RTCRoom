@@ -1,2 +1,12 @@
-<!--pages/person/person.wxml-->
-<text>pages/person/person.wxml</text>
+<view class="person-view">
+  <image src="{{userInfo.avatarUrl}}" class="headImg" background-size="cover"></image>
+  <view>{{userInfo.nickName}}。性别：{{userInfo.gender}}</view>
+</view>
+<view class="textli">
+<view>购买钻石</view>
+<view>我的收益</view>
+<view>礼品福利社</view>
+<view>邀请好友送钻石</view>
+<view>邀请码/优惠码兑换</view>
+<view>常见问题</view>
+</view>

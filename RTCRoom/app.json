@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/push/push",
+    "pages/chat/chat",
     "pages/main/main",
     "pages/game/game",
     "pages/more/more",
