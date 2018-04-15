@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="RTCRoomServer:war">
+    <output-path>$PROJECT_DIR$/RTCRoomServer/target</output-path>
+    <root id="archive" name="RTCRoomServer.war">
+      <element id="artifact" artifact-name="RTCRoomServer:war exploded" />
+    </root>
+  </artifact>
+</component>
