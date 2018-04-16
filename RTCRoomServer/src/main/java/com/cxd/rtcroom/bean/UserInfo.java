@@ -1,8 +1,6 @@
 package com.cxd.rtcroom.bean;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -11,6 +9,9 @@ import java.io.Serializable;
 @Entity
 public class UserInfo implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long seqId;
+
     private String openId;
     private String sessionKey;
     private String nickName;
@@ -25,6 +26,33 @@ public class UserInfo implements Serializable {
     private String pushUrl;
     @Transient
     private String playUrl;
+
+    public long getSeqId() {
+        return seqId;
+    }
+
+    public UserInfo setSeqId(long seqId) {
+        this.seqId = seqId;
+        return this;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public UserInfo setOpenId(String openId) {
+        this.openId = openId;
+        return this;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public UserInfo setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+        return this;
+    }
 
     public String getNickName() {
         return nickName;
@@ -80,44 +108,31 @@ public class UserInfo implements Serializable {
         return this;
     }
 
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey;
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
     public String getLastLoginTime() {
         return lastLoginTime;
     }
 
-    public void setLastLoginTime(String lastLoginTime) {
+    public UserInfo setLastLoginTime(String lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
+        return this;
     }
 
     public boolean isInited() {
         return inited;
     }
 
-    public void setInited(boolean inited) {
+    public UserInfo setInited(boolean inited) {
         this.inited = inited;
+        return this;
     }
 
     public String getPushUrl() {
         return pushUrl;
     }
 
-    public void setPushUrl(String pushUrl) {
+    public UserInfo setPushUrl(String pushUrl) {
         this.pushUrl = pushUrl;
+        return this;
     }
 
     public String getPlayUrl() {

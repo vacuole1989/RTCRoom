@@ -55,21 +55,37 @@ public class QueryController {
             Long txTime = DateUtil.format(DateUtil.format(new Date(), "yyyy-MM-dd") + " 23:59:59", "yyyy-MM-dd HH:mm:ss").getTime() / 1000;
             String pushUrl = "rtmp://" + PUSH_BIZ_ID + ".livepush.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId() + "?bizid=" + PUSH_BIZ_ID + "&" + getSafeUrl(PUSH_KEY, PUSH_BIZ_ID + "_" + userInfo.getOpenId(), txTime);
 
-            String playUrl="rtmp://"+PUSH_BIZ_ID+".liveplay.myqcloud.com/live/"+PUSH_BIZ_ID + "_" + userInfo.getOpenId();
+            String playUrl = "rtmp://" + PUSH_BIZ_ID + ".liveplay.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId();
 
 
-            userInfoRepository.save(userInfo);
+            UserInfo userInfoByOpenId = userInfoRepository.findUserInfoByOpenId(openid);
+            if (null != userInfoByOpenId) {
+                userInfoByOpenId.setLastLoginTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+                userInfoRepository.save(userInfoByOpenId);
+            } else {
+                userInfoRepository.save(userInfo);
+            }
+
             userInfo.setPushUrl(pushUrl);
             userInfo.setPlayUrl(playUrl);
             System.out.println(playUrl);
             System.out.println(pushUrl);
-            return new JSONResult(true, "用户登陆成功", userInfo);
+            return new JSONResult(true, "用户登陆成功", userInfoByOpenId.getSeqId()!=0L?userInfoByOpenId:userInfo);
         } else {
             return new JSONResult(false, "用户登录失败");
         }
     }
 
 
+    @RequestMapping("/initPage")
+    public JSONResult onLogin(@RequestParam long seqId) {
+        UserInfo one = userInfoRepository.findOne(seqId);
+        one.setInited(true);
+        userInfoRepository.save(one);
+
+        return new JSONResult(true, "初始化成功");
+
+    }
 
 
     private static String getSafeUrl(String key, String streamId, long txTime) {

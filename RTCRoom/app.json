@@ -1,10 +1,11 @@
 {
   "pages": [
-    "pages/push/push",
+    "pages/welcome/welcome",
+    "pages/index/index",
     "pages/chat/chat",
-    "pages/main/main",
     "pages/game/game",
     "pages/more/more",
+    "pages/initpage/initpage",
     "pages/person/person"
   ],
   "networkTimeout": {

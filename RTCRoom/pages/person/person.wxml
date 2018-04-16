@@ -1,6 +1,7 @@
 <view class="person-view">
   <image src="{{userInfo.avatarUrl}}" class="headImg" background-size="cover"></image>
-  <view>{{userInfo.nickName}}。性别：{{userInfo.gender}}</view>
+  <view>{{userInfo.nickName}} {{userInfo.gender=='1'?'男':(userInfo.gender=='2'?'女':'未知')}}</view>
+  <view>无介号：{{userInfo.seqId}}</view>
 </view>
 <view class="textli">
 <view>购买钻石</view>

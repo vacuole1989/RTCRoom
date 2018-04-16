@@ -1,6 +1,6 @@
 /* pages/person/person.wxss */
 page{
-  background-color: gray;
+  background-color: white;
 }
 .person-view {
   text-align: center;
