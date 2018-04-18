@@ -6,6 +6,7 @@ import com.cxd.rtcroom.dto.JSONResult;
 import com.cxd.rtcroom.util.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -50,27 +55,22 @@ public class QueryController {
             String sessionKey = map.get("session_key") + "";
             userInfo.setSessionKey(sessionKey);
             userInfo.setOpenId(openid);
-            userInfo.setLastLoginTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-
+            userInfo.setOnline(false);
+            userInfo.setOnlineStatusTime(DateUtil.format(new Date()));
+            userInfo.setLastLoginTime(DateUtil.format(new Date() ));
             Long txTime = DateUtil.format(DateUtil.format(new Date(), "yyyy-MM-dd") + " 23:59:59", "yyyy-MM-dd HH:mm:ss").getTime() / 1000;
             String pushUrl = "rtmp://" + PUSH_BIZ_ID + ".livepush.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId() + "?bizid=" + PUSH_BIZ_ID + "&" + getSafeUrl(PUSH_KEY, PUSH_BIZ_ID + "_" + userInfo.getOpenId(), txTime);
-
-            String playUrl = "rtmp://" + PUSH_BIZ_ID + ".liveplay.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId();
-
 
             UserInfo userInfoByOpenId = userInfoRepository.findUserInfoByOpenId(openid);
             if (null != userInfoByOpenId) {
                 userInfoByOpenId.setLastLoginTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
                 userInfoRepository.save(userInfoByOpenId);
+                BeanUtils.copyProperties(userInfoByOpenId, userInfo);
             } else {
                 userInfoRepository.save(userInfo);
             }
-
             userInfo.setPushUrl(pushUrl);
-            userInfo.setPlayUrl(playUrl);
-            System.out.println(playUrl);
-            System.out.println(pushUrl);
-            return new JSONResult(true, "用户登陆成功", userInfoByOpenId.getSeqId()!=0L?userInfoByOpenId:userInfo);
+            return new JSONResult(true, "用户登陆成功", userInfo);
         } else {
             return new JSONResult(false, "用户登录失败");
         }
@@ -86,6 +86,77 @@ public class QueryController {
         return new JSONResult(true, "初始化成功");
 
     }
+
+
+    @RequestMapping("/onlineUser")
+    public JSONResult onlineUser(@RequestParam long seqId) {
+
+        UserInfo one = userInfoRepository.findOne(seqId);
+        one.setOnlineStatusTime(DateUtil.format(new Date()));
+        UserInfo userInfo = userInfoRepository.findOnlineUser(true,seqId,DateUtil.format(System.currentTimeMillis()-1000));
+        if (null != userInfo) {
+            userInfo.setOnline(false);
+            userInfoRepository.save(userInfo);
+            String playUrl = "rtmp://" + PUSH_BIZ_ID + ".liveplay.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId();
+            userInfo.setPlayUrl(playUrl);
+            one.setOnline(false);
+            userInfoRepository.save(one);
+            return new JSONResult(true, "找到在线用户", userInfo);
+        } else {
+            one.setOnline(true);
+            userInfoRepository.save(one);
+            return new JSONResult(false, "未找到");
+        }
+    }
+
+    @RequestMapping("/online")
+    public JSONResult online(@RequestParam long seqId) {
+        UserInfo one = userInfoRepository.findOne(seqId);
+        one.setOnline(true);
+        userInfoRepository.save(one);
+        return new JSONResult(true,"在线成功");
+    }
+    @RequestMapping("/offline")
+    public JSONResult offline(@RequestParam long seqId) {
+        UserInfo one = userInfoRepository.findOne(seqId);
+        one.setOnline(false);
+        userInfoRepository.save(one);
+        return new JSONResult(true,"离线成功");
+    }
+
+
+    @RequestMapping("/heartbeat")
+    public JSONResult heartbeat(@RequestParam long seqId) {
+        System.out.println("心跳：ID:"+seqId+","+DateUtil.format(new Date()));
+
+
+
+
+        return new JSONResult(true,"心跳成功");
+    }
+
+    @RequestMapping("/notify")
+    public JSONResult heartbeat(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            ServletInputStream ris = request.getInputStream();
+
+
+            StringBuilder content = new StringBuilder();
+            byte[] b = new byte[1024];
+            int lens;
+            while ((lens = ris.read(b)) > 0) {
+                content.append(new String(b, 0, lens));
+            }
+            String strcont = content.toString();
+            System.out.println(strcont);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return new JSONResult(true,"心跳成功");
+    }
+
 
 
     private static String getSafeUrl(String key, String streamId, long txTime) {

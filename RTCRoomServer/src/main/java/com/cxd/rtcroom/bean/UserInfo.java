@@ -21,7 +21,11 @@ public class UserInfo implements Serializable {
     private String city;
     private String country;
     private String lastLoginTime;
+    private String onlineStatusTime;
+
     private boolean inited;
+    private boolean online;
+
     @Transient
     private String pushUrl;
     @Transient
@@ -141,6 +145,24 @@ public class UserInfo implements Serializable {
 
     public UserInfo setPlayUrl(String playUrl) {
         this.playUrl = playUrl;
+        return this;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public UserInfo setOnline(boolean online) {
+        this.online = online;
+        return this;
+    }
+
+    public String getOnlineStatusTime() {
+        return onlineStatusTime;
+    }
+
+    public UserInfo setOnlineStatusTime(String onlineStatusTime) {
+        this.onlineStatusTime = onlineStatusTime;
         return this;
     }
 }

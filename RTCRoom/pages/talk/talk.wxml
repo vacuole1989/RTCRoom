@@ -1,0 +1,10 @@
+<!--pages/push/push.wxml-->
+<view style="width:100%;height: 100%; background-color: black;">
+  <view class='poster'>
+    <cover-image class='set' src="../Resources/player.jpg"></cover-image>
+  </view>
+  <live-player id="video-player" object-fit="fillCrop" autoplay="true" src="{{playUrl}}">
+  </live-player>
+  <live-pusher id="camera-push" autopush="true" background-mute="true" url="{{pushUrl}}" bindstatechange="onPushEvent">
+  </live-pusher>
+</view>

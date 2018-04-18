@@ -1,0 +1,60 @@
+.choose-block {
+  background: black;
+  width: 200rpx;
+  height: 300rpx;
+  display: inline-block;
+  margin: 10rpx;
+  border-radius: 10rpx;
+  margin-top: 20rpx;
+  text-align: center;
+  color: white;
+  opacity: 0.3;
+}
+.choose-block image{
+  width: 160rpx;
+  height: 160rpx;
+  border-radius:100rpx; 
+  margin: 0 auto;
+  margin-top:20rpx; 
+}
+.order {  
+   height: 40rpx;  
+   line-height: 40rpx;  
+   text-align: center;  
+}  
+ .order .line {  
+   display: inline-block;  
+   width: 300rpx;  
+   border-top: 1px solid #ccc;  
+}  
+.order .txt {  
+   color: #686868;  
+   vertical-align: middle;  
+}
+.search{
+  width: 85%;
+  height: 80rpx;
+  border: 1px solid white;
+  border-radius: 50rpx;
+  margin: 0 auto;
+  background-color: black;
+  opacity: 0.3;
+  margin-top: 20rpx;
+  padding-left: 80rpx;
+  font-size: 50rpx;
+  color: white;
+}
+.search-icon{
+  position: absolute;
+  width: 60rpx;
+  height: 60rpx;
+  left: 30rpx;
+  top:30rpx;
+}
+.clear-icon{
+  position: absolute;
+   width: 60rpx;
+  height: 60rpx;
+  right: 30rpx;
+  top:30rpx;
+}

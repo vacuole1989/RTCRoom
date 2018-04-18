@@ -1,11 +1,15 @@
-/* pages/person/person.wxss */
+
 page{
-  background-color: white;
+  background-color: #ccc;
 }
 .person-view {
   text-align: center;
+  color: white;
 }
-
+.mansym{
+  width: 50rpx;
+  height: 50rpx;
+}
 .headImg {
   margin: 0 auto;
   width: 300rpx;
@@ -17,5 +21,13 @@ page{
   font-size: 40rpx;
   line-height: 100rpx;
   margin-top: 50rpx;
-  padding:0 100rpx; 
+
+}
+.nickname{
+  font-size: 40rpx;
+  
+}
+.list-item{
+    padding:0 100rpx; 
+    color: white;
 }

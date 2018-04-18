@@ -1,12 +1,15 @@
 {
   "pages": [
     "pages/welcome/welcome",
-    "pages/index/index",
-    "pages/chat/chat",
-    "pages/game/game",
-    "pages/more/more",
     "pages/initpage/initpage",
-    "pages/person/person"
+    "pages/index/index",
+    "pages/person/person",
+    "pages/search/search",
+    "pages/game/game",
+    "pages/chat/chat",
+    "pages/talk/talk",
+    "pages/loading/loading",
+    "pages/more/more"
   ],
   "networkTimeout": {
     "request": 60000

@@ -1,13 +1,23 @@
 <view class="person-view">
   <image src="{{userInfo.avatarUrl}}" class="headImg" background-size="cover"></image>
-  <view>{{userInfo.nickName}} {{userInfo.gender=='1'?'男':(userInfo.gender=='2'?'女':'未知')}}</view>
+  <view class="nickname">
+  <text>{{userInfo.nickName}}</text> 
+  <block wx:if="{{userInfo.gender==1}}">
+    <image class='mansym' src='../Resources/man.png'></image>
+  </block>
+  <block wx:if="{{userInfo.gender==2}}">
+    <image class='mansym' src='../Resources/woman.png'></image>
+  </block>
+  
+  </view>
+  
   <view>无介号：{{userInfo.seqId}}</view>
 </view>
 <view class="textli">
-<view>购买钻石</view>
-<view>我的收益</view>
-<view>礼品福利社</view>
-<view>邀请好友送钻石</view>
-<view>邀请码/优惠码兑换</view>
-<view>常见问题</view>
+  <view class="list-item"><image class='mansym' src='../Resources/diamond.png'></image>购买钻石</view>
+  <view class="list-item"><image class='mansym' src='../Resources/money.png'></image>我的收益</view>
+  <view class="list-item"><image class='mansym' src='../Resources/gift.png'></image>礼品福利社</view>
+  <view class="list-item"><image class='mansym' src='../Resources/invite.png'></image>邀请好友送钻石</view>
+  <view class="list-item"><image class='mansym' src='../Resources/invite.png'></image>邀请码/优惠码兑换</view>
+  <view class="list-item"><image class='mansym' src='../Resources/question.png'></image>常见问题</view>
 </view>
