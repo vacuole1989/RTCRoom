@@ -1,1 +1,19 @@
-{}
+{
+  "app": "22043.livepush.myqcloud.com",
+  "appid": 1255874368,
+  "appname": "live",
+  "channel_id": "22043_o98MX0aQVZt8USP5OEmkOYEPXpPw",
+  "errcode": 1,
+  "errmsg": "recv rtmp deleteStream",
+  "event_time": 1524058656,
+  "event_type": 0,
+  "idc_id": 32,
+  "node": "157.255.9.100",
+  "sequence": "1809984588835955943",
+  "set_id": 2,
+  "sign": "b538acc73bcf617986ced15101ae4f6a",
+  "stream_id": "22043_o98MX0aQVZt8USP5OEmkOYEPXpPw",
+  "stream_param": "bizid=22043&txSecret=190115f6b518542556e6ecaaac6d08f4&txTime=5AD76B7F",
+  "t": 1524059256,
+  "user_ip": "124.160.213.16"
+}

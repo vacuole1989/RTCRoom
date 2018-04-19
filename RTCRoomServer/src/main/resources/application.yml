@@ -2,6 +2,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
   datasource:
     url: jdbc:mysql://121.40.92.169:3306/rtcroom
     username: root

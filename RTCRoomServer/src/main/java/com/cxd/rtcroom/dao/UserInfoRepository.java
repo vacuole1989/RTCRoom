@@ -6,8 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UserInfoRepository extends CrudRepository<UserInfo, Long> {
 
-    @Query("from UserInfo t where t.online = ?1 and t.seqId <> ?2 and t.onlineStatusTime >= ?3")
-    UserInfo findOnlineUser(boolean online,long seqId,String time);
+    @Query("from UserInfo t where t.online = true and t.seqId <> ?1 and t.onlineStatusTime >= ?2")
+    UserInfo findOnlineUser(long seqId,String time);
 
 
     UserInfo findUserInfoByOpenId(String openId);

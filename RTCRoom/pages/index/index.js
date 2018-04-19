@@ -1,4 +1,3 @@
-// pages/push/push.js
 const app = getApp();
 var config = require('../../config.js');
 Page({
@@ -6,7 +5,7 @@ Page({
     /**
      * 页面的初始数据
      */
-    data: {},
+    data: {time: 20},
     onPersonClick: function () {
         wx.navigateTo({
             url: "../person/person",
@@ -27,14 +26,81 @@ Page({
             url: "../chat/chat",
         });
     },
+    onMoreClick: function () {
+      wx.navigateTo({
+        url: "../more/more",
+      });
+    },
     onTalkClick: function () {
-        wx.navigateTo({
-            url: "../loading/loading",
+        var _this = this;
+        wx.request({
+            url: config.url + '/online?seqId=' + app.globalData.userInfo.seqId,
+            success: function (res) {
+                _this.setData({
+                    time: 20
+                });
+                wx.showLoading({
+                    title: '匹配中…'+_this.data.time,
+                    mask:true
+                });
+                _this.munTime();
+                _this.getOnlinePerson();
+            }
         });
     },
-    onMoreClick: function () {
-        wx.navigateTo({
-            url: "../more/more",
+    munTime: function () {
+      this.timer = setTimeout(function () {
+        if (this.data.time > 0) {
+          var tt = this.data.time - 1;
+          this.setData({
+            time: tt
+          });
+          this.munTime();
+        }
+      }.bind(this), 1000);
+    },
+    getOnlinePerson: function () {
+        var _this = this;
+        wx.request({
+            method: 'POST',
+            url: config.url + '/onlineUser?seqId=' + app.globalData.userInfo.seqId,
+            success: function (res) {
+                wx.showLoading({
+                    title: '匹配中…'+_this.data.time,
+                    mask:true
+                });
+                if (res.data.success) {
+                    wx.hideLoading();
+                    if (_this.data.time > 0) {
+                        _this.setData({
+                            time: 0
+                        });
+                        app.globalData.userInfo.playUrl = res.data.data.playUrl;
+                        wx.navigateTo({
+                            url: '../talk/talk?time='+res.data.data.time,
+                        })
+                    }else{
+                        _this.onOffOnline();
+                    }
+                } else {
+                    if (_this.data.time > 0) {
+                        setTimeout(function () {
+                            this.getOnlinePerson();
+                        }.bind(_this), 1000);
+                    } else {
+                        wx.hideLoading();
+                        _this.onOffOnline();
+                    }
+                }
+            }
+        })
+    },
+    onOffOnline:function(){
+        wx.request({
+            url: config.url + '/offline?seqId=' + app.globalData.userInfo.seqId,
+            success: function (res) {
+
+            }
         });
     },
     /**
@@ -74,7 +140,6 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
-        this.stop();
         wx.setKeepScreenOn({
             keepScreenOn: false,
         })

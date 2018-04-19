@@ -1,11 +1,18 @@
 package com.cxd.rtcroom.controller;
 
+import com.cxd.rtcroom.bean.OnlineUser;
+import com.cxd.rtcroom.bean.SysConfig;
 import com.cxd.rtcroom.bean.UserInfo;
+import com.cxd.rtcroom.dao.OnlineUserRepository;
+import com.cxd.rtcroom.dao.SysConfigRepository;
 import com.cxd.rtcroom.dao.UserInfoRepository;
 import com.cxd.rtcroom.dto.JSONResult;
 import com.cxd.rtcroom.util.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.catalina.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,18 +24,18 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
 @RequestMapping("/app")
 public class QueryController {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryController.class);
 
     private static final String APPID = "wx30dde37837561559";
     private static final String PUSH_KEY = "db9af79969137a69357befb62a27924f";
@@ -42,6 +49,10 @@ public class QueryController {
     private RestTemplate restTemplate;
     @Autowired
     private UserInfoRepository userInfoRepository;
+    @Autowired
+    private OnlineUserRepository onlineUserRepository;
+    @Autowired
+    private SysConfigRepository sysConfigRepository;
 
     @RequestMapping("/onLogin")
     public JSONResult onLogin(@RequestParam String code, @RequestBody UserInfo userInfo) {
@@ -57,7 +68,7 @@ public class QueryController {
             userInfo.setOpenId(openid);
             userInfo.setOnline(false);
             userInfo.setOnlineStatusTime(DateUtil.format(new Date()));
-            userInfo.setLastLoginTime(DateUtil.format(new Date() ));
+            userInfo.setLastLoginTime(DateUtil.format(new Date()));
             Long txTime = DateUtil.format(DateUtil.format(new Date(), "yyyy-MM-dd") + " 23:59:59", "yyyy-MM-dd HH:mm:ss").getTime() / 1000;
             String pushUrl = "rtmp://" + PUSH_BIZ_ID + ".livepush.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId() + "?bizid=" + PUSH_BIZ_ID + "&" + getSafeUrl(PUSH_KEY, PUSH_BIZ_ID + "_" + userInfo.getOpenId(), txTime);
 
@@ -89,58 +100,108 @@ public class QueryController {
 
 
     @RequestMapping("/onlineUser")
+    @Transactional(rollbackOn = Exception.class)
     public JSONResult onlineUser(@RequestParam long seqId) {
 
-        UserInfo one = userInfoRepository.findOne(seqId);
-        one.setOnlineStatusTime(DateUtil.format(new Date()));
-        UserInfo userInfo = userInfoRepository.findOnlineUser(true,seqId,DateUtil.format(System.currentTimeMillis()-1000));
+        OnlineUser onlineUser = onlineUserRepository.findOne(seqId);
+        if (null != onlineUser) {
+            if(DateUtil.format(onlineUser.getExpireTime()).getTime() < System.currentTimeMillis()){
+                deleteExpireUser(onlineUser);
+            }else{
+                String playUrl = "rtmp://" + PUSH_BIZ_ID + ".liveplay.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + onlineUser.getContactOpenId();
+                UserInfo one = userInfoRepository.findOne(seqId);
+                one.setOnline(false);
+                userInfoRepository.save(one);
+                Map<String,String> map=new HashMap<>();
+                map.put("time",(int)(DateUtil.format(onlineUser.getExpireTime()).getTime() - System.currentTimeMillis())+"");
+                map.put("playUrl",playUrl);
+                return new JSONResult(true, "已经在房间里面", map);
+            }
+
+        }
+
+        UserInfo userInfo = userInfoRepository.findOnlineUser(seqId, DateUtil.format(System.currentTimeMillis() - 1000));
         if (null != userInfo) {
-            userInfo.setOnline(false);
-            userInfoRepository.save(userInfo);
+            //  找到了，保存用户信息到在线用户表。
+            saveOnlineuser(userInfo, seqId);
+
             String playUrl = "rtmp://" + PUSH_BIZ_ID + ".liveplay.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId();
-            userInfo.setPlayUrl(playUrl);
-            one.setOnline(false);
-            userInfoRepository.save(one);
-            return new JSONResult(true, "找到在线用户", userInfo);
+            SysConfig one = sysConfigRepository.findOne(1L);
+            Map<String,String> map=new HashMap<>();
+            map.put("time",null!=one?one.getValue():"60");
+            map.put("playUrl",playUrl);
+
+
+            return new JSONResult(true, "找到在线用户", map);
         } else {
-            one.setOnline(true);
+            //未找到，更新心跳
+            UserInfo one = userInfoRepository.findOne(seqId);
+            one.setOnlineStatusTime(DateUtil.format(new Date()));
             userInfoRepository.save(one);
             return new JSONResult(false, "未找到");
         }
     }
+
+    @Transactional(rollbackOn = Exception.class)
+    void saveOnlineuser(UserInfo userInfo, long seqId) {
+        SysConfig sysConfig = sysConfigRepository.findOne(1L);
+        long expireTime=Long.parseLong(null!=sysConfig?sysConfig.getValue():"60");
+        UserInfo one = userInfoRepository.findOne(seqId);
+        OnlineUser onlineUser = new OnlineUser().setContactOpenId(userInfo.getOpenId()).setContactSeqId(userInfo.getSeqId()).setLastFlushTime(DateUtil.format(new Date())).setSeqId(one.getSeqId()).setExpireTime(DateUtil.format(System.currentTimeMillis() + expireTime * 1000));
+        OnlineUser onlineUser1 = new OnlineUser().setContactOpenId(one.getOpenId()).setContactSeqId(one.getSeqId()).setLastFlushTime(DateUtil.format(new Date())).setSeqId(userInfo.getSeqId()).setExpireTime(DateUtil.format(System.currentTimeMillis() + expireTime * 1000));
+        List<OnlineUser> onlineUsers = new ArrayList<>();
+        onlineUsers.add(onlineUser);
+        onlineUsers.add(onlineUser1);
+        onlineUserRepository.save(onlineUsers);
+
+        userInfo.setOnline(false);
+        userInfoRepository.save(userInfo);
+
+        one.setOnline(false);
+        userInfoRepository.save(one);
+
+    }
+
 
     @RequestMapping("/online")
     public JSONResult online(@RequestParam long seqId) {
         UserInfo one = userInfoRepository.findOne(seqId);
         one.setOnline(true);
         userInfoRepository.save(one);
-        return new JSONResult(true,"在线成功");
+        return new JSONResult(true, "在线成功");
     }
+
     @RequestMapping("/offline")
     public JSONResult offline(@RequestParam long seqId) {
         UserInfo one = userInfoRepository.findOne(seqId);
         one.setOnline(false);
         userInfoRepository.save(one);
-        return new JSONResult(true,"离线成功");
+        return new JSONResult(true, "离线成功");
     }
 
 
     @RequestMapping("/heartbeat")
+    @Transactional(rollbackOn = Exception.class)
     public JSONResult heartbeat(@RequestParam long seqId) {
-        System.out.println("心跳：ID:"+seqId+","+DateUtil.format(new Date()));
+        OnlineUser one = onlineUserRepository.findOne(seqId);
+        if (null != one && DateUtil.format(one.getExpireTime()).getTime() < System.currentTimeMillis()) {
+            deleteExpireUser(one);
+        }
+        return new JSONResult(true, "心跳成功");
+    }
 
-
-
-
-        return new JSONResult(true,"心跳成功");
+    private void deleteExpireUser(OnlineUser one) {
+        OnlineUser onlineUser = onlineUserRepository.findOne(one.getContactSeqId());
+        List<OnlineUser> onlineUsers = new ArrayList<>();
+        onlineUsers.add(one);
+        onlineUsers.add(onlineUser);
+        onlineUserRepository.delete(onlineUsers);
     }
 
     @RequestMapping("/notify")
     public JSONResult heartbeat(HttpServletRequest request, HttpServletResponse response) {
         try {
             ServletInputStream ris = request.getInputStream();
-
-
             StringBuilder content = new StringBuilder();
             byte[] b = new byte[1024];
             int lens;
@@ -148,15 +209,12 @@ public class QueryController {
                 content.append(new String(b, 0, lens));
             }
             String strcont = content.toString();
-            System.out.println(strcont);
+            LOGGER.info("直播流心跳数据：" + strcont);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        return new JSONResult(true,"心跳成功");
+        return new JSONResult(true, "心跳成功");
     }
-
 
 
     private static String getSafeUrl(String key, String streamId, long txTime) {
