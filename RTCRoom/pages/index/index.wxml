@@ -3,7 +3,7 @@
     <cover-view class="cover_box">
       <cover-image class="center_bottom_btn" src="../Resources/wifi.png" bindtap="onTalkClick"></cover-image>
       <cover-image class="right_top_btn" src="../Resources/gamepad.png" bindtap="onGameClick"></cover-image>
-      <cover-image class="left_top_btn" src="../Resources/person.png" bindtap="onPersonClick"></cover-image>
+      <cover-image class="left_top_btn" src="{{userInfo.avatarUrl}}" bindtap="onPersonClick"></cover-image>
       <cover-image class="left_bottom_btn" src="../Resources/chat.png" bindtap="onChatClick"></cover-image>
       <cover-image class="right_bottom_btn" src="../Resources/dots.png" bindtap="onMoreClick"></cover-image>
       <cover-view class="cover-input" bindtap="onSearchClick">

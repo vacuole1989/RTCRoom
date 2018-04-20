@@ -1,6 +1,35 @@
-/**app.wxss**/
-/*@import "./weui.wxss";*/
 
+
+.weui_btn {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 14px;
+  padding-right: 14px;
+  box-sizing: border-box;
+  font-size: 18px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  line-height: 2.33333333;
+  border-radius: 5px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow: hidden;
+}
+.weui_btn_plain_primary {
+  color: #04be02;
+  border: 1px solid #04be02;
+}
+.weui_btn.weui_btn_mini {
+  line-height: 1.9;
+  font-size: 14px;
+  padding: 0 0.75em;
+  display: inline-block;
+}
+.weui_btn+.weui_btn {
+  margin-top: 15px;
+}
 .container {
   height: 100%;
   display: flex;
@@ -20,9 +49,6 @@ page {
     background-color: #F8F8F8;
 }
 
-body, page {
-  height: 100%;
-}
 
 .weui-cells__title {
   margin-top: 15px;
@@ -79,4 +105,50 @@ body, page {
 
 .weui-placeholder {
     color: #B2B2B2;
+}
+
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /*padding: 200rpx 0;*/
+  box-sizing: border-box;
+  background: #F0F4F3;
+}
+
+.container.withtab{
+  margin: 105rpx 0 0 0;
+  /*top: 105rpx;*/
+}
+.flex-wrp{
+  display: flex;
+}
+.flex-tab{
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+.flex-item{
+  flex-grow: 1;
+  text-align: center;
+}
+.top-tab{
+  width: 750rpx;
+  height: 100rpx;
+  background: #298DE5;
+  color: #8CCEFD;
+  font-size: 28rpx;
+  line-height: 100rpx;
+  box-shadow: 0 2px 2px #bebebe;
+  margin: 0 0 8rpx 0;
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+}
+.toptab.active{
+  color: #ffffff;
+  border-bottom: solid 2px #ffffff;
 }

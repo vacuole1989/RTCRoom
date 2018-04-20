@@ -1,10 +1,29 @@
-<!--pages/push/push.wxml-->
+
 <view style="width:100%;height: 100%; background-color: black;">
-  <live-player id="video-player" object-fit="fillCrop" autoplay="true" src="{{playUrl}}" bindstatechange="onPlayEvent">
-  </live-player>
-  <live-pusher id="camera-push" autopush="true" background-mute="true" url="{{pushUrl}}" bindstatechange="onPushEvent">
-      <cover-view class="cover-box">
-          <cover-view class="cover-time">{{stopTime}}S</cover-view>
-      </cover-view>
-  </live-pusher>
+    <live-player id="video-player" object-fit="fillCrop" autoplay="true" src="{{playUrl}}"
+                 bindstatechange="onPlayEvent">
+        <cover-view class="cover-view ">
+            <cover-view class="cover-nickname push-txt">
+                {{contactUserInfo.nickName}}
+            </cover-view>
+            <cover-view class="cover-city push-txt">
+                {{contactUserInfo.country}}●{{contactUserInfo.city}}；{{contactGender}}
+            </cover-view>
+            <cover-image src="../Resources/face.png" class="cover-face"></cover-image>
+            <cover-image src="../Resources/close.png" class="cover-close" bindtap="onCloseTalk"></cover-image>
+            <cover-image src="../Resources/cgift.png" class="cover-gift"></cover-image>
+
+            <cover-view class="cover-friends-background"></cover-view>
+            <cover-view class="cover-friends">
+                {{addFriends}}
+            </cover-view>
+
+        </cover-view>
+    </live-player>
+    <live-pusher id="camera-push" autopush="true" background-mute="true" url="{{pushUrl}}"
+                 bindstatechange="onPushEvent">
+        <cover-view class="cover-box">
+            <cover-view class="cover-time">{{stopTime}}S</cover-view>
+        </cover-view>
+    </live-pusher>
 </view>

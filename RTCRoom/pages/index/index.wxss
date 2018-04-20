@@ -28,6 +28,7 @@
   height: 90rpx;
   right: 20rpx;
   top: 20rpx;
+
 }
 
 .left_top_btn {
@@ -36,6 +37,7 @@
   height: 90rpx;
   left: 20rpx;
   top: 20rpx;
+  border-radius: 45rpx;
 }
 
 .left_bottom_btn {

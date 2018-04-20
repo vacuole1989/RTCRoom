@@ -1,2 +1,34 @@
-<!--pages/chat/chat.wxml-->
-<text>pages/chat/chat.wxml</text>
+<view class="container chat">
+    <view class="chat-item flex-wrp">
+        <view class="avatar flex-item">
+            <image src="../Resources/addUser.png"></image>
+        </view>
+        <view class="chat-content flex-item">
+            <view class="chat-sourcetop">
+                <text class="chatmatetop">好友请求</text>
+            </view>
+        </view>
+    </view>
+    <view class="chat-item flex-wrp">
+        <view class="avatar flex-item">
+            <image src="../Resources/historyUser.png"></image>
+        </view>
+        <view class="chat-content flex-item">
+            <view class="chat-sourcetop">
+                <text class="chatmatetop">遇到过的人</text>
+            </view>
+        </view>
+    </view>
+    <view class="chat-item flex-wrp">
+        <view class="avatar flex-item">
+            <image src="../images/icon9.jpeg"></image>
+        </view>
+        <view class="chat-content flex-item">
+            <view class="chat-source">
+                <text class="chatmate">东哥</text>
+            </view>
+            <text class="chat-txt">已经成为好友</text>
+        </view>
+    </view>
+
+</view>

@@ -11,7 +11,34 @@ Page({
         pushUrl: "",
         playUrl: "",
         timer: null,
-        stopTime: 60
+        stopTime: 60,
+        userInfo: {},
+        contactUserInfo: {},
+        addFriends:"请求加好友"
+    },
+    onCloseTalk: function () {
+        var _this = this;
+        wx.showModal({
+            title: '提示',
+            content: '您确定要退出聊天吗？',
+            success: function (res) {
+                if (res.confirm) {
+                    wx.request({
+                        url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,
+                        success: function (res) {
+                            _this.setData({
+                                stopTime: 0
+                            });
+                            wx.redirectTo({
+                                url: '../index/index',
+                            });
+                        }
+                    });
+                } else if (res.cancel) {
+
+                }
+            }
+        });
     },
     onPlayAll: function () {
         if (this.data.livePushContext.start) {
@@ -30,31 +57,37 @@ Page({
         }
     },
     munTime: function () {
-      this.timer = setTimeout(function () {
-        console.info(this.data.stopTime)
-        if (this.data.stopTime > 0) {
-          var tt = this.data.stopTime - 1;
-          this.setData({
-            stopTime: tt
-          });
-          this.munTime();
-        }else{
-          wx.navigateBack();
-        }
-      }.bind(this), 1000);
+        this.timer = setTimeout(function () {
+            if (this.data.stopTime > 0) {
+                var tt = this.data.stopTime - 1;
+                this.setData({
+                    stopTime: tt
+                });
+                this.munTime();
+            } else {
+                wx.redirectTo({
+                    url: '../index/index',
+                });
+            }
+        }.bind(this), 1000);
     },
     onHeartBeat: function () {
         var _this = this;
-       
         wx.request({
-          url: config.url + '/heartbeat?seqId=' + app.globalData.userInfo.seqId,
-          success: function (res) {
-            if(_this.data.stopTime>0){
-              setTimeout(function () {
-                this.onHeartBeat();
-              }.bind(_this), 1000);
+            url: config.url + '/heartBeat?seqId=' + app.globalData.userInfo.seqId,
+            success: function (res) {
+                if (res.data.data) {
+                    if (_this.data.stopTime > 0) {
+                        setTimeout(function () {
+                            this.onHeartBeat();
+                        }.bind(_this), 1000);
+                    }
+                } else {
+                    wx.redirectTo({
+                        url: '../index/index',
+                    });
+                }
             }
-          }
         });
     },
     onPushInit: function () {
@@ -70,7 +103,7 @@ Page({
     onPushEvent: function (e) {
         console.info("推流状态：" + e.detail.code + "-" + e.detail.message);
         if (e.detail.code && (e.detail.code < 0 || e.detail.code > 3000)) {
-            this.onStopAll();
+            // this.onStopAll();
         }
 
     },
@@ -93,8 +126,23 @@ Page({
      */
     onLoad: function (options) {
         this.setData({
-            stopTime:options.time
+            stopTime: app.globalData.stopTime,
+            userInfo: app.globalData.userInfo,
+            contactUserInfo: app.globalData.contactUserInfo
         });
+        if (this.data.contactUserInfo.gender==1){
+          this.setData({
+            contactGender:'男'
+          });
+        } else if (this.data.contactUserInfo.gender == 2){
+          this.setData({
+            contactGender: '女'
+          });
+        }else{
+          this.setData({
+            contactGender: '未知'
+          });
+        }
     },
 
     /**
@@ -109,23 +157,29 @@ Page({
         })
     },
     /**
- * 生命周期函数--监听页面初次渲染完成
- */
+     * 生命周期函数--监听页面初次渲染完成
+     */
     onReady: function () {
-      console.info("2聊天页面准备好了");
-      this.createContext();
-      this.onPushInit();
-      wx.setKeepScreenOn({
-        keepScreenOn: true,
-      })
+        console.info("2聊天页面准备好了");
+        this.createContext();
+        this.onPushInit();
+        wx.setKeepScreenOn({
+            keepScreenOn: true,
+        })
     },
     /**
      * 生命周期函数--监听页面隐藏
      */
     onHide: function () {
-        console.info("聊天页面隐藏了");
-        // clearTimeout(this.timer);
-        // this.onStopAll();
+        console.info("3聊天页面隐藏了");
+        clearTimeout(this.timer);
+        this.onStopAll();
+        wx.request({
+            url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,
+            success: function (res) {
+
+            }
+        });   
         wx.setKeepScreenOn({
             keepScreenOn: false,
         });
@@ -135,9 +189,15 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
-        console.info("聊天页面卸载了");
+        console.info("4聊天页面卸载了");
+        
         clearTimeout(this.timer);
         this.onStopAll();
+        wx.request({
+            url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,
+            success: function (res) {
+            }
+        });
         wx.setKeepScreenOn({
             keepScreenOn: false,
         });

@@ -1,8 +1,10 @@
 package com.cxd.rtcroom.controller;
 
+import com.cxd.rtcroom.bean.AppTag;
 import com.cxd.rtcroom.bean.OnlineUser;
 import com.cxd.rtcroom.bean.SysConfig;
 import com.cxd.rtcroom.bean.UserInfo;
+import com.cxd.rtcroom.dao.AppTagRepository;
 import com.cxd.rtcroom.dao.OnlineUserRepository;
 import com.cxd.rtcroom.dao.SysConfigRepository;
 import com.cxd.rtcroom.dao.UserInfoRepository;
@@ -15,10 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.ServletInputStream;
@@ -33,15 +32,11 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/app")
+@RequestMapping("/app/{appId}")
 public class QueryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryController.class);
 
-    private static final String APPID = "wx30dde37837561559";
-    private static final String PUSH_KEY = "db9af79969137a69357befb62a27924f";
-    private static final String PUSH_BIZ_ID = "22043";
-    private static final String sessionKey = "https://api.weixin.qq.com/sns/jscode2session";
-    private static final String SECRET = "ed201c3998d2fb9ecb32f9c2a6c42aec";
+    private static final String SESSION_KEY = "https://api.weixin.qq.com/sns/jscode2session";
     private static final char[] DIGITS_LOWER =
             {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
@@ -53,13 +48,16 @@ public class QueryController {
     private OnlineUserRepository onlineUserRepository;
     @Autowired
     private SysConfigRepository sysConfigRepository;
+    @Autowired
+    private AppTagRepository appTagRepository;
 
     @RequestMapping("/onLogin")
-    public JSONResult onLogin(@RequestParam String code, @RequestBody UserInfo userInfo) {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        System.out.println(gson.toJson(userInfo));
-        Map map = restTemplate.getForObject("{sessionkey}?appid={APPID}&secret={SECRET}&js_code={JSCODE}&grant_type=authorization_code", Map.class, sessionKey, APPID, SECRET, code);
-        System.out.println(map);
+    public JSONResult onLogin(@PathVariable String appId, @RequestParam String code, @RequestBody UserInfo userInfo) {
+
+        AppTag appTag = appTagRepository.findOne(appId);
+
+
+        Map map = restTemplate.getForObject("{sessionkey}?appid={APPID}&secret={SECRET}&js_code={JSCODE}&grant_type=authorization_code", Map.class, SESSION_KEY, appTag.getAppId(), appTag.getAppSecret(), code);
 
         if (null != map.get("openid")) {
             String openid = map.get("openid") + "";
@@ -70,11 +68,17 @@ public class QueryController {
             userInfo.setOnlineStatusTime(DateUtil.format(new Date()));
             userInfo.setLastLoginTime(DateUtil.format(new Date()));
             Long txTime = DateUtil.format(DateUtil.format(new Date(), "yyyy-MM-dd") + " 23:59:59", "yyyy-MM-dd HH:mm:ss").getTime() / 1000;
-            String pushUrl = "rtmp://" + PUSH_BIZ_ID + ".livepush.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId() + "?bizid=" + PUSH_BIZ_ID + "&" + getSafeUrl(PUSH_KEY, PUSH_BIZ_ID + "_" + userInfo.getOpenId(), txTime);
+            String pushUrl = "rtmp://" + appTag.getPushBizId() + ".livepush.myqcloud.com/live/" + appTag.getPushBizId() + "_" + userInfo.getOpenId() + "?bizid=" + appTag.getPushBizId() + "&" + getSafeUrl(appTag.getPushKey(), appTag.getPushBizId() + "_" + userInfo.getOpenId(), txTime);
 
             UserInfo userInfoByOpenId = userInfoRepository.findUserInfoByOpenId(openid);
             if (null != userInfoByOpenId) {
                 userInfoByOpenId.setLastLoginTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+                userInfoByOpenId.setAvatarUrl(userInfo.getAvatarUrl());
+                userInfoByOpenId.setCity(userInfo.getCity());
+                userInfoByOpenId.setCountry(userInfo.getCountry());
+                userInfoByOpenId.setGender(userInfo.getGender());
+                userInfoByOpenId.setNickName(userInfo.getNickName());
+                userInfoByOpenId.setProvince(userInfo.getProvince());
                 userInfoRepository.save(userInfoByOpenId);
                 BeanUtils.copyProperties(userInfoByOpenId, userInfo);
             } else {
@@ -101,37 +105,63 @@ public class QueryController {
 
     @RequestMapping("/onlineUser")
     @Transactional(rollbackOn = Exception.class)
-    public JSONResult onlineUser(@RequestParam long seqId) {
-
+    public JSONResult onlineUser(@PathVariable String appId,@RequestParam long seqId) {
+        AppTag appTag = appTagRepository.findOne(appId);
         OnlineUser onlineUser = onlineUserRepository.findOne(seqId);
         if (null != onlineUser) {
-            if(DateUtil.format(onlineUser.getExpireTime()).getTime() < System.currentTimeMillis()){
+            if (DateUtil.format(onlineUser.getExpireTime()).getTime() < System.currentTimeMillis()) {
                 deleteExpireUser(onlineUser);
-            }else{
-                String playUrl = "rtmp://" + PUSH_BIZ_ID + ".liveplay.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + onlineUser.getContactOpenId();
+            } else {
+                String playUrl = "rtmp://" + appTag.getPushBizId() + ".liveplay.myqcloud.com/live/" + appTag.getPushBizId() + "_" + onlineUser.getContactOpenId();
                 UserInfo one = userInfoRepository.findOne(seqId);
                 one.setOnline(false);
                 userInfoRepository.save(one);
-                Map<String,String> map=new HashMap<>();
-                map.put("time",(int)(DateUtil.format(onlineUser.getExpireTime()).getTime() - System.currentTimeMillis())+"");
-                map.put("playUrl",playUrl);
+                Map<String, Object> map = new HashMap<>();
+                map.put("stopTime", (int) ((DateUtil.format(onlineUser.getExpireTime()).getTime() - System.currentTimeMillis()) / 1000) + "");
+                map.put("playUrl", playUrl);
+                map.put("contactUserInfo", userInfoRepository.findOne(onlineUser.getContactSeqId()));
                 return new JSONResult(true, "已经在房间里面", map);
             }
 
         }
 
-        UserInfo userInfo = userInfoRepository.findOnlineUser(seqId, DateUtil.format(System.currentTimeMillis() - 1000));
-        if (null != userInfo) {
+        UserInfo contactUserInfo = userInfoRepository.findOnlineUser(seqId, DateUtil.format(System.currentTimeMillis() - 1000));
+        if (null != contactUserInfo) {
             //  找到了，保存用户信息到在线用户表。
-            saveOnlineuser(userInfo, seqId);
 
-            String playUrl = "rtmp://" + PUSH_BIZ_ID + ".liveplay.myqcloud.com/live/" + PUSH_BIZ_ID + "_" + userInfo.getOpenId();
-            SysConfig one = sysConfigRepository.findOne(1L);
-            Map<String,String> map=new HashMap<>();
-            map.put("time",null!=one?one.getValue():"60");
-            map.put("playUrl",playUrl);
+            SysConfig sysConfig = sysConfigRepository.findOne(1L);
+            long expireTime = Long.parseLong(null != sysConfig ? sysConfig.getValue() : "60");
+            UserInfo myUser = userInfoRepository.findOne(seqId);
+            OnlineUser myOnlineUser = new OnlineUser()
+                    .setContactOpenId(contactUserInfo.getOpenId())
+                    .setContactSeqId(contactUserInfo.getSeqId())
+                    .setLastFlushTime(DateUtil.format(new Date()))
+                    .setSeqId(myUser.getSeqId())
+                    .setExpireTime(DateUtil.format(System.currentTimeMillis() + expireTime * 1000));
+            OnlineUser contactOnlineUser = new OnlineUser()
+                    .setContactOpenId(myUser.getOpenId())
+                    .setContactSeqId(myUser.getSeqId())
+                    .setLastFlushTime(DateUtil.format(new Date()))
+                    .setSeqId(contactUserInfo.getSeqId())
+                    .setExpireTime(DateUtil.format(System.currentTimeMillis() + expireTime * 1000));
+            List<OnlineUser> onlineUsers = new ArrayList<>();
+            onlineUsers.add(myOnlineUser);
+            onlineUsers.add(contactOnlineUser);
+            onlineUserRepository.save(onlineUsers);
 
+            contactUserInfo.setOnline(false);
+            myUser.setOnline(false);
+            List<UserInfo> userInfos = new ArrayList<>();
+            userInfos.add(contactUserInfo);
+            userInfos.add(myUser);
 
+            userInfoRepository.save(userInfos);
+
+            String playUrl = "rtmp://" + appTag.getPushBizId() + ".liveplay.myqcloud.com/live/" + appTag.getPushBizId() + "_" + contactUserInfo.getOpenId();
+            Map<String, Object> map = new HashMap<>();
+            map.put("stopTime", expireTime);
+            map.put("playUrl", playUrl);
+            map.put("contactUserInfo", contactUserInfo);
             return new JSONResult(true, "找到在线用户", map);
         } else {
             //未找到，更新心跳
@@ -141,27 +171,6 @@ public class QueryController {
             return new JSONResult(false, "未找到");
         }
     }
-
-    @Transactional(rollbackOn = Exception.class)
-    void saveOnlineuser(UserInfo userInfo, long seqId) {
-        SysConfig sysConfig = sysConfigRepository.findOne(1L);
-        long expireTime=Long.parseLong(null!=sysConfig?sysConfig.getValue():"60");
-        UserInfo one = userInfoRepository.findOne(seqId);
-        OnlineUser onlineUser = new OnlineUser().setContactOpenId(userInfo.getOpenId()).setContactSeqId(userInfo.getSeqId()).setLastFlushTime(DateUtil.format(new Date())).setSeqId(one.getSeqId()).setExpireTime(DateUtil.format(System.currentTimeMillis() + expireTime * 1000));
-        OnlineUser onlineUser1 = new OnlineUser().setContactOpenId(one.getOpenId()).setContactSeqId(one.getSeqId()).setLastFlushTime(DateUtil.format(new Date())).setSeqId(userInfo.getSeqId()).setExpireTime(DateUtil.format(System.currentTimeMillis() + expireTime * 1000));
-        List<OnlineUser> onlineUsers = new ArrayList<>();
-        onlineUsers.add(onlineUser);
-        onlineUsers.add(onlineUser1);
-        onlineUserRepository.save(onlineUsers);
-
-        userInfo.setOnline(false);
-        userInfoRepository.save(userInfo);
-
-        one.setOnline(false);
-        userInfoRepository.save(one);
-
-    }
-
 
     @RequestMapping("/online")
     public JSONResult online(@RequestParam long seqId) {
@@ -180,17 +189,34 @@ public class QueryController {
     }
 
 
-    @RequestMapping("/heartbeat")
+    @RequestMapping("/heartBeat")
     @Transactional(rollbackOn = Exception.class)
     public JSONResult heartbeat(@RequestParam long seqId) {
+        boolean online;
         OnlineUser one = onlineUserRepository.findOne(seqId);
+        if (null != one && DateUtil.format(one.getExpireTime()).getTime() >= System.currentTimeMillis()) {
+            online = true;
+        } else {
+            online = false;
+        }
         if (null != one && DateUtil.format(one.getExpireTime()).getTime() < System.currentTimeMillis()) {
             deleteExpireUser(one);
         }
-        return new JSONResult(true, "心跳成功");
+        return new JSONResult(true, "心跳成功", online);
     }
 
-    private void deleteExpireUser(OnlineUser one) {
+    @RequestMapping("/closeTalk")
+    @Transactional(rollbackOn = Exception.class)
+    public JSONResult closeTalk(@RequestParam long seqId) {
+        OnlineUser one = onlineUserRepository.findOne(seqId);
+        if (null != one) {
+            deleteExpireUser(one);
+        }
+        return new JSONResult(true, "删除成功");
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    void deleteExpireUser(OnlineUser one) {
         OnlineUser onlineUser = onlineUserRepository.findOne(one.getContactSeqId());
         List<OnlineUser> onlineUsers = new ArrayList<>();
         onlineUsers.add(one);

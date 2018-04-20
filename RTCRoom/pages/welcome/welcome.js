@@ -1,4 +1,3 @@
-// pages/welcome/welcome.js
 const app = getApp();
 var config = require('../../config.js');
 Page({
@@ -6,16 +5,43 @@ Page({
     /**
      * 页面的初始数据
      */
-    data: {},
-
-    /**
-     * 生命周期函数--监听页面加载
-     */
-    onLoad: function (options) {
+    data: {jumpTime: 3, hasLogin: false},
+    munTime: function () {
+        this.timer = setTimeout(function () {
+            if (this.data.jumpTime > 0) {
+                var tt = this.data.jumpTime - 1;
+                this.setData({
+                    jumpTime: tt
+                });
+                this.munTime();
+            } else {
+                if (this.data.hasLogin) {
+                    this.onJump();
+                } else {
+                    this.onLogin(true);
+                }
+            }
+        }.bind(this), 1000);
+    },
+    onJump: function () {
+        
+        if (app.globalData.userInfo.inited) {
+            wx.redirectTo({
+                url: '../index/index',
+            });
+        } else {
+            wx.redirectTo({
+                url: '../initpage/initpage',
+            });
+        }
+    },
+    onLogin: function (show) {
         var _this = this;
-        wx.showLoading({
-            title: '登录中',
-        })
+        if (show) {
+            wx.showLoading({
+                title: '登录中',
+            });
+        }
         wx.getUserInfo({
             success: res => {
                 app.globalData.userInfo = res.userInfo
@@ -29,16 +55,14 @@ Page({
                                 data: app.globalData.userInfo,
                                 success: function (retdata) {
                                     app.globalData.userInfo = retdata.data.data;
-                                    if (app.globalData.userInfo.inited) {
-                                        wx.redirectTo({
-                                            url: '../index/index',
-                                        })
-                                    } else {
-                                        wx.redirectTo({
-                                            url: '../initpage/initpage',
-                                        })
+                                    _this.setData({
+                                        hasLogin: true
+                                    });
+                                    if (show) {
+                                        _this.onJump();
+                                        wx.hideLoading();
                                     }
-                                    wx.hideLoading();
+
                                 }
                             })
                         } else {
@@ -47,7 +71,16 @@ Page({
                     }
                 });
             }
-        })
+        });
+    },
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function (options) {
+        var _this = this;
+        _this.munTime();
+        _this.onLogin(false);
+
 
     },
 

@@ -1,20 +1,19 @@
-
-var config = require('./config.js');
-
 App({
-  onLaunch: function (options) {
+    onLaunch: function (options) {
 
-  },
-  onShow: function (options) {
+    },
+    onShow: function (options) {
 
-  },
-  onHide: function () {
+    },
+    onHide: function () {
 
-  },
-  onError: function (msg) {
-    console.log(msg);
-  },
-  globalData: {
-    userInfo: null
-  }
+    },
+    onError: function (msg) {
+        console.log(msg);
+    },
+    globalData: {
+        userInfo: {},
+        contactUserInfo: {},
+        stopTime: 0
+    }
 })

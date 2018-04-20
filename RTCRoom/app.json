@@ -1,14 +1,13 @@
 {
   "pages": [
     "pages/welcome/welcome",
+    "pages/game/game",
     "pages/initpage/initpage",
     "pages/index/index",
     "pages/person/person",
     "pages/search/search",
-    "pages/game/game",
     "pages/chat/chat",
     "pages/talk/talk",
-    "pages/loading/loading",
     "pages/more/more"
   ],
   "networkTimeout": {
@@ -20,5 +19,6 @@
     "navigationBarBackgroundColor": "#000",
     "navigationBarTitleText": "无介时代",
     "navigationBarTextStyle": "#fff"
+    
   }
 }

@@ -5,7 +5,10 @@ Page({
     /**
      * 页面的初始数据
      */
-    data: {time: 20},
+    data: {
+        time: 20,
+        userInfo:{}
+    },
     onPersonClick: function () {
         wx.navigateTo({
             url: "../person/person",
@@ -27,9 +30,9 @@ Page({
         });
     },
     onMoreClick: function () {
-      wx.navigateTo({
-        url: "../more/more",
-      });
+        wx.navigateTo({
+            url: "../more/more",
+        });
     },
     onTalkClick: function () {
         var _this = this;
@@ -40,8 +43,8 @@ Page({
                     time: 20
                 });
                 wx.showLoading({
-                    title: '匹配中…'+_this.data.time,
-                    mask:true
+                    title: '匹配中…' + _this.data.time,
+                    mask: true
                 });
                 _this.munTime();
                 _this.getOnlinePerson();
@@ -49,15 +52,15 @@ Page({
         });
     },
     munTime: function () {
-      this.timer = setTimeout(function () {
-        if (this.data.time > 0) {
-          var tt = this.data.time - 1;
-          this.setData({
-            time: tt
-          });
-          this.munTime();
-        }
-      }.bind(this), 1000);
+        this.timer = setTimeout(function () {
+            if (this.data.time > 0) {
+                var tt = this.data.time - 1;
+                this.setData({
+                    time: tt
+                });
+                this.munTime();
+            }
+        }.bind(this), 1000);
     },
     getOnlinePerson: function () {
         var _this = this;
@@ -66,8 +69,8 @@ Page({
             url: config.url + '/onlineUser?seqId=' + app.globalData.userInfo.seqId,
             success: function (res) {
                 wx.showLoading({
-                    title: '匹配中…'+_this.data.time,
-                    mask:true
+                    title: '匹配中…' + _this.data.time,
+                    mask: true
                 });
                 if (res.data.success) {
                     wx.hideLoading();
@@ -76,10 +79,12 @@ Page({
                             time: 0
                         });
                         app.globalData.userInfo.playUrl = res.data.data.playUrl;
-                        wx.navigateTo({
-                            url: '../talk/talk?time='+res.data.data.time,
+                        app.globalData.contactUserInfo = res.data.data.contactUserInfo;
+                        app.globalData.stopTime = res.data.data.stopTime;
+                        wx.redirectTo({
+                            url: '../talk/talk',
                         })
-                    }else{
+                    } else {
                         _this.onOffOnline();
                     }
                 } else {
@@ -95,7 +100,7 @@ Page({
             }
         })
     },
-    onOffOnline:function(){
+    onOffOnline: function () {
         wx.request({
             url: config.url + '/offline?seqId=' + app.globalData.userInfo.seqId,
             success: function (res) {
@@ -107,7 +112,9 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-
+        this.setData({
+            userInfo:app.globalData.userInfo
+        })
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
