@@ -1,6 +1,6 @@
 
 page{
-  background-color: #ccc;
+  background-color: gray;
 }
 .person-view {
   text-align: center;
