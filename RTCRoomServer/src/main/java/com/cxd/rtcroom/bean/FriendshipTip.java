@@ -6,44 +6,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-
+/**
+ * 朋友消息表
+ */
 @Entity
-public class Friendship implements Serializable {
+public class FriendshipTip implements Serializable {
 
     private static final long serialVersionUID = -5512682677765090740L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long seqId;
-    private long ownerSeqId;
-    private long friendSeqId;
+    private long userSeqId;
+    private long msg;
     private String createTime;
-
 
     public long getSeqId() {
         return seqId;
     }
 
-    public Friendship setSeqId(long seqId) {
+    public FriendshipTip setSeqId(long seqId) {
         this.seqId = seqId;
         return this;
     }
 
-    public long getOwnerSeqId() {
-        return ownerSeqId;
+    public long getUserSeqId() {
+        return userSeqId;
     }
 
-    public Friendship setOwnerSeqId(long ownerSeqId) {
-        this.ownerSeqId = ownerSeqId;
+    public FriendshipTip setUserSeqId(long userSeqId) {
+        this.userSeqId = userSeqId;
         return this;
     }
 
-
-    public long getFriendSeqId() {
-        return friendSeqId;
+    public long getMsg() {
+        return msg;
     }
 
-    public Friendship setFriendSeqId(long friendSeqId) {
-        this.friendSeqId = friendSeqId;
+    public FriendshipTip setMsg(long msg) {
+        this.msg = msg;
         return this;
     }
 
@@ -51,7 +51,7 @@ public class Friendship implements Serializable {
         return createTime;
     }
 
-    public Friendship setCreateTime(String createTime) {
+    public FriendshipTip setCreateTime(String createTime) {
         this.createTime = createTime;
         return this;
     }

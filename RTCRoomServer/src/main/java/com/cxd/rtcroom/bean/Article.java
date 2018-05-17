@@ -3,30 +3,58 @@ package com.cxd.rtcroom.bean;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * 文章表
+ */
 @Entity
 public class Article implements Serializable {
     private static final long serialVersionUID = 7452723379712667522L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long seqId;
-    private long userId;
+    /**
+     * 发布用户主键
+     */
+    private long userSeqId;
+    /**
+     * 头像
+     */
     private String avatarUrl;
+    /**
+     * 昵称
+     */
     private String nickName;
+    /**
+     * 文章标题
+     */
     private String title;
+    /**
+     * 文章内容
+     */
     @Column(length = 4000)
     private String content;
+    /**
+     * 点击次数
+     */
     private int clickTimes;
+    /**
+     * 评论数
+     */
+    private int commentCounts;
+    /**
+     * 创建时间
+     */
     private String createTime;
+    /**
+     * 修改时间
+     */
     private String modifyTime;
 
-    public long getUserId() {
-        return userId;
-    }
+    /**
+     * 文章分类主键
+     */
+    private long categorySeqId;
 
-    public Article setUserId(long userId) {
-        this.userId = userId;
-        return this;
-    }
 
     public long getSeqId() {
         return seqId;
@@ -97,6 +125,33 @@ public class Article implements Serializable {
 
     public Article setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+        return this;
+    }
+
+    public long getUserSeqId() {
+        return userSeqId;
+    }
+
+    public Article setUserSeqId(long userSeqId) {
+        this.userSeqId = userSeqId;
+        return this;
+    }
+
+    public int getCommentCounts() {
+        return commentCounts;
+    }
+
+    public Article setCommentCounts(int commentCounts) {
+        this.commentCounts = commentCounts;
+        return this;
+    }
+
+    public long getCategorySeqId() {
+        return categorySeqId;
+    }
+
+    public Article setCategorySeqId(long categorySeqId) {
+        this.categorySeqId = categorySeqId;
         return this;
     }
 }

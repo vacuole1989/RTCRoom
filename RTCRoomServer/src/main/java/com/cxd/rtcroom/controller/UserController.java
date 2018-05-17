@@ -30,8 +30,8 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/app/{appId}")
-public class QueryController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QueryController.class);
+public class UserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     private static final String SESSION_KEY = "https://api.weixin.qq.com/sns/jscode2session";
     private static final char[] DIGITS_LOWER =
@@ -52,7 +52,6 @@ public class QueryController {
     public JSONResult onLogin(@PathVariable String appId, @RequestParam String code, @RequestBody UserInfo userInfo) {
 
         AppTag appTag = appTagRepository.findOne(appId);
-
 
         Map map = restTemplate.getForObject("{sessionkey}?appid={APPID}&secret={SECRET}&js_code={JSCODE}&grant_type=authorization_code", Map.class, SESSION_KEY, appTag.getAppId(), appTag.getAppSecret(), code);
 
@@ -251,10 +250,8 @@ public class QueryController {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             txSecret = byteArrayToHexString(
                     messageDigest.digest(input.getBytes("UTF-8")));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            LOGGER.error(e.getMessage());
         }
 
         return txSecret == null ? "" :
