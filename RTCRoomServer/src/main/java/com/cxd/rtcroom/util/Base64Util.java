@@ -117,7 +117,6 @@ public class Base64Util {
 
     public static void main(String[] args) {
         String str=fileToBase64(new File("D:/1.zip"));
-        System.out.println(str);
         File file = base64ToFile(str,"D:/2.zip");
     }
 
