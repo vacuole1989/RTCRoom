@@ -27,3 +27,11 @@
     color: white;
     text-align: center;
 }
+.sharebtn{
+  font-size: 30rpx;
+  width: 400rpx;
+  height: 80rpx;
+  position: absolute;
+  left: calc(50% - 200rpx);
+  bottom: 50rpx; 
+}

@@ -3,11 +3,13 @@
     "pages/welcome/welcome",
     "pages/game/game",
     "pages/initpage/initpage",
-    "pages/index/index",
     "pages/person/person",
+    "pages/persondetail/persondetail",
+    "pages/index/index",
     "pages/search/search",
     "pages/chat/chat",
     "pages/talk/talk",
+    "pages/setting/setting",
     "pages/more/more"
   ],
   "networkTimeout": {

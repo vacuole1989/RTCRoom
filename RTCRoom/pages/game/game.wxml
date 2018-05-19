@@ -1,11 +1,5 @@
 <!--index.wxml-->
 <scroll-view scroll-y="true" class="container" bindscrolltoupper="upper" upper-threshold="10" lower-threshold="5" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
-    <!-- <view class="search flex-wrp">
-        <view class="search-left flex-item">
-            <image src="../Resources/search_gray.png"></image>
-            <input />
-        </view>
-    </view> -->
      <view class="search">
         <input placeholder="今天  更新8篇" bindinput="inputSN"/>
         <image src="../Resources/search_gray.png"></image>

@@ -1,5 +1,6 @@
 
 <view class="main">
+    <button open-type="getUserInfo" class="sharebtn">用户权限</button>
     <image class="back-image" src="../Resources/player.jpg"></image>
     <view class="backCycle"></view>
     <view class="timeTxt">{{jumpTime}}</view>

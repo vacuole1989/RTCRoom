@@ -22,7 +22,7 @@ Page({
         console.log('onLoad')
         var that = this
         //调用应用实例的方法获取全局数据
-        this.getData();
+        that.getData();
     },
     upper: function () {
         wx.showNavigationBarLoading()
@@ -59,6 +59,7 @@ Page({
             feed: feed_data,
             feed_length: feed_data.length
         });
+        console.info(feed_data)
     },
     refresh: function () {
         wx.showToast({
