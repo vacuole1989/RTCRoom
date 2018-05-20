@@ -5,7 +5,7 @@ Page({
     /**
      * 页面的初始数据
      */
-    data: {jumpTime: 1, hasLogin: false},
+    data: { jumpTime: 0, hasLogin: false },
     munTime: function () {
         this.timer = setTimeout(function () {
             if (this.data.jumpTime > 0) {
@@ -24,7 +24,7 @@ Page({
         }.bind(this), 1000);
     },
     onJump: function () {
-        
+
         if (app.globalData.userInfo.inited) {
             wx.redirectTo({
                 url: '../index/index',

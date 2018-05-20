@@ -21,7 +21,7 @@ Page({
     },
     onGameClick: function () {
         wx.navigateTo({
-            url: "../game/game",
+            url: "../article/article",
         });
     },
     onChatClick: function () {

@@ -29,6 +29,10 @@ public class Article implements Serializable {
      */
     private String title;
     /**
+     * 简介
+     */
+    private String memo;
+    /**
      * 文章内容
      */
     @Column(length = 4000)
@@ -152,6 +156,15 @@ public class Article implements Serializable {
 
     public Article setCategorySeqId(long categorySeqId) {
         this.categorySeqId = categorySeqId;
+        return this;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public Article setMemo(String memo) {
+        this.memo = memo;
         return this;
     }
 }

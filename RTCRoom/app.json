@@ -1,8 +1,9 @@
 {
   "pages": [
     "pages/welcome/welcome",
-    "pages/game/game",
     "pages/initpage/initpage",
+    "pages/article/article",
+    "pages/articledetail/articledetail",
     "pages/person/person",
     "pages/persondetail/persondetail",
     "pages/index/index",
