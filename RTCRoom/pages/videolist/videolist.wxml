@@ -1,0 +1,19 @@
+<view class="listNews">
+    <view class="list-flex">
+        <block wx:for="{{newList}}" wx:key="cid">
+            <view class="listBox">
+                <navigator url="/pages/videodetail/videodetail?seqId={{item.seqId}}">
+                    <view class="boxPic">
+                        <image src="{{item.picUrl}}" />
+                    </view>
+                    <view class="boxTitle1">
+                        <text>{{item.title}}</text>
+                    </view>
+                    <view class="boxTitle2">
+                        <text>{{item.memo}}</text>
+                    </view>
+                </navigator>
+            </view>
+        </block>
+    </view>
+</view>

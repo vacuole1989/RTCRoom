@@ -1,0 +1,24 @@
+<view class="contain">
+    <view class="itemList">
+        <view class="item">头像
+            <image class="avatarUrl" src="{{userInfo.avatarUrl}}"></image>
+            <image src="../Resources/right.png"></image>
+        </view>
+        <view class="item">昵称
+            <span>{{userInfo.nickName}}</span>
+            <image src="../Resources/right.png"></image>
+        </view>
+        <view class="item">性别
+            <span>{{userInfo.gender=='1'?'男':'女'}}</span>
+            <image src="../Resources/right.png"></image>
+        </view>
+        <view class="item">无介号
+            <span>{{userInfo.seqId}}</span>
+            <image src="../Resources/right.png"></image>
+        </view>
+        <view class="item">手机号
+            <span>{{userInfo.nickName}}</span>
+            <image src="../Resources/right.png"></image>
+        </view>
+    </view>
+</view>

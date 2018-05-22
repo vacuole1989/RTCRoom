@@ -1,0 +1,9 @@
+<view class="contain">
+    <view class="itemList">
+        <view class="item" bindtap='onPersonDetail'>编辑个人资料<image src="../Resources/right.png"></image></view>
+        <view class="item">消息通知<image src="../Resources/right.png"></image></view>
+        <view class="item">空间清理<image src="../Resources/right.png"></image></view>
+        <view class="item">用户协议<image src="../Resources/right.png"></image></view>
+        <view class="item">关于Tiki<image src="../Resources/right.png"></image></view>
+    </view>
+</view>
