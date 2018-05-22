@@ -19,16 +19,16 @@
             </view>
         </view>
     </view>
-    <view class="chat-item flex-wrp">
+    <navigator class="chat-item flex-wrp" wx:for="{{friends}}" url='/pages/chatting/chatting?seqId={{item.seqId}}'>
         <view class="avatar flex-item">
-            <image src="../images/icon9.jpeg"></image>
+            <image src="{{item.avatarUrl}}"></image>
         </view>
         <view class="chat-content flex-item">
             <view class="chat-source">
-                <text class="chatmate">东哥</text>
+                <text class="chatmate">{{item.nickName}}</text>
             </view>
             <text class="chat-txt">已经成为好友</text>
         </view>
-    </view>
+    </navigator>
 
 </view>

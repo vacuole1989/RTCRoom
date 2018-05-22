@@ -12,6 +12,7 @@
     "pages/index/index",
     "pages/search/search",
     "pages/chat/chat",
+    "pages/chatting/chatting",
     "pages/talk/talk",
     "pages/setting/setting"
   ],

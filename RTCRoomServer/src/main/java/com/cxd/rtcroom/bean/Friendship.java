@@ -17,6 +17,7 @@ public class Friendship implements Serializable {
     private long ownerSeqId;
     private long friendSeqId;
     private String createTime;
+    private String modifyTime;
 
 
     public long getSeqId() {
@@ -53,6 +54,15 @@ public class Friendship implements Serializable {
 
     public Friendship setCreateTime(String createTime) {
         this.createTime = createTime;
+        return this;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public Friendship setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
         return this;
     }
 }
