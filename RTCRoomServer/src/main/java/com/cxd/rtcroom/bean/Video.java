@@ -34,7 +34,7 @@ public class Video implements Serializable {
     /**
      * 视频图片
      */
-    private String headImg;
+    private String picUrl;
     /**
      * 视频简介
      */
@@ -111,14 +111,6 @@ public class Video implements Serializable {
         return this;
     }
 
-    public String getHeadImg() {
-        return headImg;
-    }
-
-    public Video setHeadImg(String headImg) {
-        this.headImg = headImg;
-        return this;
-    }
 
     public String getMemo() {
         return memo;
@@ -180,6 +172,15 @@ public class Video implements Serializable {
 
     public Video setCategorySeqId(long categorySeqId) {
         this.categorySeqId = categorySeqId;
+        return this;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public Video setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
         return this;
     }
 }

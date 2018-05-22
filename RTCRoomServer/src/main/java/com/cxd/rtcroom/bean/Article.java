@@ -27,9 +27,9 @@ public class Article implements Serializable {
     /**
      * 文章标题
      */
-    private String title;
+    private String title="";
     /**
-     * 简介
+     * 文章简介
      */
     private String memo;
     /**

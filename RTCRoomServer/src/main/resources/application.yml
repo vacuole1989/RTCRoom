@@ -7,7 +7,3 @@ spring:
     url: jdbc:mysql://121.40.92.169:3306/rtcroom
     username: root
     password: '!QAZ2wsx'
-mybatis:
-  configuration:
-   #配置项：开启下划线到驼峰的自动转换. 作用：将数据库字段根据驼峰规则自动注入到对象属性。
-   map-underscore-to-camel-case: true

@@ -6,12 +6,14 @@
     "pages/articledetail/articledetail",
     "pages/person/person",
     "pages/persondetail/persondetail",
+    "pages/video/video",
+    "pages/videolist/videolist",
+    "pages/videodetail/videodetail",
     "pages/index/index",
     "pages/search/search",
     "pages/chat/chat",
     "pages/talk/talk",
-    "pages/setting/setting",
-    "pages/more/more"
+    "pages/setting/setting"
   ],
   "networkTimeout": {
     "request": 60000

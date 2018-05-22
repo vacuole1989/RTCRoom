@@ -31,7 +31,7 @@ Page({
     },
     onMoreClick: function () {
         wx.navigateTo({
-            url: "../more/more",
+            url: "../video/video",
         });
     },
     onTalkClick: function () {

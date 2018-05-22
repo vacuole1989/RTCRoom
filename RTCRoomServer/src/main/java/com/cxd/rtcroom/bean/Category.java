@@ -20,6 +20,14 @@ public class Category implements Serializable {
      * 视频分类还是文章分类
      */
     private int type;
+    /**
+     * 是否是视频分类
+     */
+    private boolean video;
+    /**
+     * 视频图片
+     */
+    private String picUrl;
 
     public String getName() {
         return name;
@@ -45,6 +53,24 @@ public class Category implements Serializable {
 
     public Category setType(int type) {
         this.type = type;
+        return this;
+    }
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public Category setVideo(boolean video) {
+        this.video = video;
+        return this;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public Category setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
         return this;
     }
 }

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -33,16 +34,16 @@ public class ArticleController {
     }
 
     @RequestMapping("/getNewArticleList")
-    public JSONResult getNewArticleList(@PathVariable String appId, long seqId) {
+    public JSONResult getNewArticleList(@PathVariable String appId, @RequestBody Article article) {
 
-        List<Article> byUserSeqId = articleRepository.findNewArticleList(0L, seqId, 5);
+        List<Article> byUserSeqId = articleRepository.findNewArticleList(0L, article.getSeqId(),"%"+article.getTitle()+"%", 5);
         return new JSONResult(true, "查找成功", byUserSeqId);
 
     }
 
     @RequestMapping("/getPreArticleList")
-    public JSONResult getPreArticleList(@PathVariable String appId, long seqId) {
-        List<Article> byUserSeqId = articleRepository.findPreArticleList(0L, seqId, 5);
+    public JSONResult getPreArticleList(@PathVariable String appId, @RequestBody Article article) {
+        List<Article> byUserSeqId = articleRepository.findPreArticleList(0L, article.getSeqId(), "%"+article.getTitle()+"%",5);
         return new JSONResult(true, "查找成功", byUserSeqId);
 
     }
@@ -51,6 +52,13 @@ public class ArticleController {
     public JSONResult getArticleById(@PathVariable String appId, long seqId) {
         Article one = articleRepository.findOne(seqId);
         return new JSONResult(true, "查找成功", one);
+
+    }
+
+    @RequestMapping("/searchArticleList")
+    public JSONResult searchArticleList(@PathVariable String appId, @RequestBody Article article) {
+        List<Article> byTitle = articleRepository.findByTitle(0L, "%"+article.getTitle()+"%",5);
+        return new JSONResult(true, "查找成功", byTitle);
 
     }
 
