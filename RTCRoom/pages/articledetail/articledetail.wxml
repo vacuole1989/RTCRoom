@@ -1,98 +1,69 @@
-<view class="container">
-    <view class="feed-item">
-        <view class="question">
-            <a class="question-link">
-                <text>{{article.title}}</text>
-            </a>
-        </view>
-        <view class="feed-source">
-            <view class="avatar">
-                <image src="{{article.avatarUrl}}"></image>
+<view>
+    <view class="container">
+        <view class="feed-item">
+            <view class="question">
+                <a class="question-link">
+                    <text>{{article.title}}</text>
+                </a>
             </view>
-            <text>{{article.nickName}}</text>
-        </view>
-        <view class="feed-time">
-            <text>{{article.createTime}}</text>
-        </view>
-        <view class="under-line"></view>
-        <view class="feed-content">
-            <view class="answer-body">
-                <view>
-                    <text class="answer-txt">{{article.memo}}</text>
+            <view class="feed-source">
+                <view class="avatar">
+                    <image src="{{article.avatarUrl}}"></image>
+                </view>
+                <text>{{article.nickName}}</text>
+            </view>
+            <view class="feed-time">
+                <text>{{article.createTime}}</text>
+            </view>
+            <view class="under-line"></view>
+            <view class="feed-content">
+                <view class="answer-body">
+                    <view>
+                        <text class="answer-txt">{{article.memo}}</text>
+                    </view>
                 </view>
             </view>
         </view>
     </view>
-</view>
-<view class="container" style='margin-top:30rpx;'>
-    <view class="feed-item" style='width:100%;'>
-        <view class="question">
-            <a class="question-link">
-                <text>全部评论</text>
-            </a>
-        </view>
-    </view>
-</view>
 
-<view class="container">
-    <view class="feed-item-small">
-        <view class="feed-source">
-            <view class="avatar">
-                <image src="{{article.avatarUrl}}"></image>
+    <view class="container" style='margin-top:30rpx;'>
+        <view class="feed-item">
+            <view class="question">
+                <a class="question-link">
+                    <text>全部评论</text>
+                </a>
             </view>
-            <text>vacuole1989　</text><text class="cindex">1楼</text>
-        </view>
-        <view class="feed-content">
-            <view class="answer-body">
-                <view>
-                    <text class="answer-txt">这是评论这是评论这是评论</text>
-                </view>
-            </view>
-        </view>
-        <view class="feed-time">
-            <text>2018-05-13</text>
         </view>
     </view>
-</view>
 
-<view class="container">
-    <view class="feed-item-small">
-        <view class="feed-source">
-            <view class="avatar">
-                <image src="{{article.avatarUrl}}"></image>
+    <view class="container" wx:for="{{comments}}" wx:key="seqId">
+        <view class="feed-item-small">
+            <view class="feed-source">
+                <view class="avatar">
+                    <image src="{{item.avatarUrl}}"></image>
+                </view>
+                <text>{{item.nickName}}　</text>
+                <text class="cindex">{{index+1}}楼</text>
             </view>
-            <text>vacuole1989　</text><text class="cindex">2楼</text>
-        </view>
-        <view class="feed-content">
-            <view class="answer-body">
-                <view>
-                    <text class="answer-txt">这是评论这是评论这是评论</text>
+            <view class="feed-content">
+                <view class="answer-body">
+                    <view>
+                        <text class="answer-txt">{{item.content}}</text>
+                    </view>
                 </view>
             </view>
-        </view>
-        <view class="feed-time">
-            <text>2018-05-13</text>
+            <view class="feed-time">
+                <text>{{item.showTime}}</text>
+            </view>
         </view>
     </view>
-</view>
 
-<view class="container">
-    <view class="feed-item-small">
-        <view class="feed-source">
-            <view class="avatar">
-                <image src="{{article.avatarUrl}}"></image>
-            </view>
-            <text>vacuole1989　</text><text class="cindex">3楼</text>
-        </view>
-        <view class="feed-content">
-            <view class="answer-body">
-                <view>
-                    <text class="answer-txt">这是评论这是评论这是评论</text>
-                </view>
-            </view>
-        </view>
-        <view class="feed-time">
-            <text>2018-05-13</text>
-        </view>
+    <view class="blackspace"></view>
+
+    <view class="commentInput">
+        <input adjust-position="false" confirm-type="send" value='{{content}}' bindconfirm='sendComment' bindinput='inputComment' placeholder='我来说几句'/>
+        <button bindtap='sendComment'>发送</button>
     </view>
+
+
 </view>

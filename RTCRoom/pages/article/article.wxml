@@ -4,7 +4,7 @@
         <image src="../Resources/search_gray.png"></image>
     </view>
 
-    <block wx:for="{{feed}}" wx:for-index="idx" wx:for-item="item" data-idx="{{idx}}">
+    <block wx:for="{{feed}}" wx:for-index="idx" wx:for-item="item">
         <view class="feed-item">
             <view class="feed-source">
                 <a class="">

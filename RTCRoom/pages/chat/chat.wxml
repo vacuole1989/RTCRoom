@@ -19,7 +19,7 @@
             </view>
         </view>
     </view>
-    <navigator class="chat-item flex-wrp" wx:for="{{friends}}" url='/pages/chatting/chatting?seqId={{item.seqId}}'>
+    <navigator class="chat-item flex-wrp" wx:for="{{friends}}" wx:key="seqId" url='/pages/chatting/chatting?seqId={{item.seqId}}'>
         <view class="avatar flex-item">
             <image src="{{item.avatarUrl}}"></image>
         </view>

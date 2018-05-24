@@ -8,7 +8,7 @@
 
 <view class="listNews">
     <view class="list-flex">
-        <block wx:for="{{newList}}" wx:key="cid">
+        <block wx:for="{{newList}}">
             <view class="listBox">
                 <navigator open-type='redirect' url="/pages/videodetail/videodetail?seqId={{item.seqId}}">
                     <view class="boxPic">

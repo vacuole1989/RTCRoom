@@ -214,7 +214,6 @@
     border-bottom: 1px solid #eee;
     box-shadow: 0 2px 5px #eee;
     margin: 0 auto;
-    width: 100%;
 }
 .container .feed-item-small .feed-source {
     left: 0;
@@ -332,3 +331,37 @@
     content: "•";
 }
 
+.commentInput{
+    width: 100%;
+    height: 90rpx;
+    background-color: #E5E5E5;
+    position: fixed;
+    bottom: 0rpx;
+    left: 0rpx;
+    border-top: 1px solid #C6C6C6;
+
+}
+.commentInput input{
+    background-color: white;
+    border-radius: 10rpx;
+    height: 70rpx;
+    position: relative;
+    padding-left: 30rpx;
+    margin: 10rpx 130rpx 10rpx 10rpx;
+}
+.commentInput button{
+    position: absolute;
+    right: 15rpx;
+    top: 10rpx;
+    background-color: #10aeff;
+    color: white;
+    border-radius: 10rpx;
+    width: 100rpx;
+    margin: 0rpx;
+    padding: 0rpx;
+    font-size: 28rpx;
+}
+
+.blackspace{
+    height: 90rpx;
+}

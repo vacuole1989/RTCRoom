@@ -1,7 +1,7 @@
 <view class="index">
     <view class="banner-scroll">
         <swiper indicator-dots="true" autoplay="true" class="Bannerswiper">
-            <block wx:for="{{banners}}" wx:key="picUrl">
+            <block wx:for="{{banners}}">
                 <swiper-item>
                     <view class="swiper-item">
                         <navigator url="/pages/videodetail/videodetail?seqId={{item.seqId}}">
@@ -19,7 +19,7 @@
     </view>
 
     <view class="roundAvatorText show">
-        <block wx:for="{{AvatorText}}" wx:key="name">
+        <block wx:for="{{AvatorText}}">
             <navigator url="/pages/videolist/videolist?categorySeqId={{item.seqId}}" class="roundList">
                 <view>
                     <image src="{{item.picUrl}}"/>
@@ -31,7 +31,7 @@
 
     <view class="listNews">
         <view class="list-flex">
-            <block wx:for="{{newList}}" wx:key="cid">
+            <block wx:for="{{newList}}">
                 <view class="listBox">
                     <navigator url="/pages/videodetail/videodetail?seqId={{item.seqId}}">
                         <view class="boxPic">
