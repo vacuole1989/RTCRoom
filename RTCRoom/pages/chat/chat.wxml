@@ -1,14 +1,14 @@
 <view class="container chat">
-    <view class="chat-item flex-wrp">
+    <navigator url='/pages/friendask/friendask' class="chat-item flex-wrp">
         <view class="avatar flex-item">
             <image src="../Resources/addUser.png"></image>
         </view>
         <view class="chat-content flex-item">
             <view class="chat-sourcetop">
-                <text class="chatmatetop">好友请求</text>
+                <text class="chatmatetop">好友请求（{{msgCount}}）</text>
             </view>
         </view>
-    </view>
+    </navigator>
     <view class="chat-item flex-wrp">
         <view class="avatar flex-item">
             <image src="../Resources/historyUser.png"></image>

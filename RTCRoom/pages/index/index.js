@@ -1,5 +1,6 @@
 const app = getApp();
 var config = require('../../config.js');
+
 Page({
 
     /**
@@ -7,7 +8,10 @@ Page({
      */
     data: {
         time: 20,
-        userInfo:{}
+        userInfo: {},
+        msgCount: 0,
+        timer: null,
+        pageHide: false
     },
     onPersonClick: function () {
         wx.navigateTo({
@@ -35,6 +39,11 @@ Page({
         });
     },
     onTalkClick: function () {
+        wx.navigateTo({
+            url: "../loading/loading",
+        });
+    },
+    onTalkClick2: function () {
         var _this = this;
         wx.request({
             url: config.url + '/online?seqId=' + app.globalData.userInfo.seqId,
@@ -112,8 +121,13 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        var _this = this;
+        _this.setData({
+            userInfo: app.globalData.userInfo
+        })
+        _this.cycleMsg();
         this.setData({
-            userInfo:app.globalData.userInfo
+            pageHide: false
         })
     },
     /**
@@ -124,7 +138,24 @@ Page({
             keepScreenOn: true,
         })
     },
+    cycleMsg: function () {
+        setTimeout(function () {
+            var _this = this;
+            wx.request({
+                url: config.url + '/getFriendTipCount?seqId=' + _this.data.userInfo.seqId,
+                success: function (res) {
+                    _this.setData({
+                        msgCount: res.data.data
+                    })
+                    app.globalData.msgCount = _this.data.msgCount;
+                    if (!_this.data.pageHide) {
 
+                        _this.cycleMsg();
+                    }
+                }
+            })
+        }.bind(this), 1000);
+    },
     /**
      * 生命周期函数--监听页面显示
      */
@@ -133,6 +164,10 @@ Page({
         wx.setKeepScreenOn({
             keepScreenOn: true
         })
+        this.setData({
+            pageHide: false
+        })
+
 
     },
 
@@ -140,16 +175,20 @@ Page({
      * 生命周期函数--监听页面隐藏
      */
     onHide: function () {
-
+        this.setData({
+            pageHide: true
+        })
     },
 
     /**
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
+        this.setData({
+            pageHide: true
+        })
         wx.setKeepScreenOn({
             keepScreenOn: false,
         })
     }
-
 })

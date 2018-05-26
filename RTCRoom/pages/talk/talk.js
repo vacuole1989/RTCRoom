@@ -14,7 +14,27 @@ Page({
         stopTime: 60,
         userInfo: {},
         contactUserInfo: {},
-        addFriends:"请求加好友"
+        addFriends:"请求加好友",
+        hasFriend:false
+    },
+    askFriend:function(){
+        var _this = this;
+        wx.request({
+            url: config.url + '/askFriend?userSeqId=' + app.globalData.userInfo.seqId + '&friendSeqId=' + _this.data.contactUserInfo.seqId,
+            success: function (res) {
+                console.info(res);
+                if(res.data.success){
+                    wx.showModal({
+                        title: '提示',
+                        content: '申请好友成功！',
+                        success: function (res) {
+
+                        }
+                    });
+                }
+                
+            }
+        });
     },
     onCloseTalk: function () {
         var _this = this;
@@ -29,7 +49,7 @@ Page({
                             _this.setData({
                                 stopTime: 0
                             });
-                            wx.redirectTo({
+                            wx.reLaunch({
                                 url: '../index/index',
                             });
                         }
@@ -65,7 +85,7 @@ Page({
                 });
                 this.munTime();
             } else {
-                wx.redirectTo({
+                wx.reLaunch({
                     url: '../index/index',
                 });
             }
@@ -83,7 +103,7 @@ Page({
                         }.bind(_this), 1000);
                     }
                 } else {
-                    wx.redirectTo({
+                    wx.reLaunch({
                         url: '../index/index',
                     });
                 }
@@ -143,6 +163,27 @@ Page({
             contactGender: '未知'
           });
         }
+
+
+
+        var _this = this;
+        wx.request({
+            url: config.url + '/getIfFriend?userSeqId=' + app.globalData.userInfo.seqId + '&friendSeqId=' + _this.data.contactUserInfo.seqId,
+            success: function (res) {
+                if(res.data.success){
+                    _this.setData({
+                        hasFriend:true,
+                        addFriends:'已经是好友'
+                    })
+                }else{
+                    _this.setData({
+                        hasFriend: false,
+                        addFriends: '请求加好友'
+                    })
+                }
+            }
+        });
+
     },
 
     /**

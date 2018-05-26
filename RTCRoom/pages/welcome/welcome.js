@@ -5,7 +5,7 @@ Page({
     /**
      * 页面的初始数据
      */
-    data: { jumpTime: 0, hasLogin: false },
+    data: { jumpTime: 3, hasLogin: false },
     munTime: function () {
         this.timer = setTimeout(function () {
             if (this.data.jumpTime > 0) {

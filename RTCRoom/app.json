@@ -3,6 +3,7 @@
     "pages/welcome/welcome",
     "pages/initpage/initpage",
     "pages/article/article",
+    "pages/newarticle/newarticle",
     "pages/articledetail/articledetail",
     "pages/person/person",
     "pages/persondetail/persondetail",
@@ -13,7 +14,9 @@
     "pages/search/search",
     "pages/chat/chat",
     "pages/chatting/chatting",
+    "pages/friendask/friendask",
     "pages/talk/talk",
+    "pages/loading/loading",
     "pages/setting/setting"
   ],
   "networkTimeout": {

@@ -12,6 +12,11 @@ Page({
         //调用应用实例的方法获取全局数据
         that.getData();
     },
+    sendArticle:function(){
+        wx.navigateTo({
+            url: '/pages/newarticle/newarticle',
+        })
+    },
     onDetailTap: function (e) {
         wx.navigateTo({
             url: '/pages/articledetail/articledetail?seqId=' + e.currentTarget.dataset.seqid,
@@ -20,11 +25,11 @@ Page({
     searchBtn: function (e) {
         var _this = this;
         if (null == _this.data.searchText || '' == _this.data.searchText) {
-            wx.showModal({
-                title: '提示',
-                content: '查询内容不能为空',
-            })
-            return;
+            // wx.showModal({
+            //     title: '提示',
+            //     content: '查询内容不能为空',
+            // })
+            // return;
         }
         wx.request({
             data: { title: _this.data.searchText },

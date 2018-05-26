@@ -8,25 +8,17 @@ Page({
     data: {
         article: {},
         comments: [],
-        content: ''
+        content: '',
+        hasResult:false
     },
     inputComment: function (e) {
         this.setData({
             content: e.detail.value
         })
     },
-    encodeUnicode: function (str) {
-        var res = [];
-        for (var i = 0; i < str.length; i++) {
-            res[i] = ("00" + str.charCodeAt(i).toString(16)).slice(-4);
-        }
-        return "\\u" + res.join("\\u");
-    },
     sendComment: function () {
-
         var _this = this;
-        console.info(_this.data.content);
-        if ('' == _this.data.comment) {
+        if ('' == _this.data.content) {
             wx.showModal({
                 title: '提示',
                 content: '请输入评论内容！',
@@ -48,10 +40,7 @@ Page({
                     },
                     method: 'POST',
                     success: function (res) {
-
-
                         _this.getComment(_this.data.article.seqId);
-
                         wx.showToast({
                             title: '评论成功',
                             success: function () {
@@ -88,9 +77,18 @@ Page({
         wx.request({
             url: config.url + '/getComment?seqId=' + seqId,
             success: function (res) {
-                _this.setData({
-                    comments: res.data.data
-                });
+                if(res.data.data.length>0){
+                    _this.setData({
+                        comments: res.data.data,
+                        hasResult:true
+                    });
+                }else{
+                    _this.setData({
+                        hasResult: false
+                    });
+                }
+                
+
             }
         })
     },

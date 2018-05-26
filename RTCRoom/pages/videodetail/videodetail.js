@@ -7,7 +7,7 @@ Page({
      */
     data: {
         video: {},
-        newList:[]
+        newList: []
     },
 
     /**
@@ -20,12 +20,11 @@ Page({
             success: function (res) {
                 _this.setData({
                     video: res.data.data.video,
-                    newList:res.data.data.list
+                    newList: res.data.data.list
                 })
             }
         })
     },
-
     /**
      * 生命周期函数--监听页面初次渲染完成
      */

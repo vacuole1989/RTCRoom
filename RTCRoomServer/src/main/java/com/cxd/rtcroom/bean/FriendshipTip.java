@@ -17,8 +17,13 @@ public class FriendshipTip implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long seqId;
     private long userSeqId;
-    private long msg;
+    private long fromUserId;
     private String createTime;
+    private String modifyTime;
+    private boolean agree;
+    private boolean iread;
+    private String avatarUrl;
+    private String nickName;
 
     public long getSeqId() {
         return seqId;
@@ -38,14 +43,6 @@ public class FriendshipTip implements Serializable {
         return this;
     }
 
-    public long getMsg() {
-        return msg;
-    }
-
-    public FriendshipTip setMsg(long msg) {
-        this.msg = msg;
-        return this;
-    }
 
     public String getCreateTime() {
         return createTime;
@@ -53,6 +50,61 @@ public class FriendshipTip implements Serializable {
 
     public FriendshipTip setCreateTime(String createTime) {
         this.createTime = createTime;
+        return this;
+    }
+
+    public long getFromUserId() {
+        return fromUserId;
+    }
+
+    public FriendshipTip setFromUserId(long fromUserId) {
+        this.fromUserId = fromUserId;
+        return this;
+    }
+
+    public boolean isAgree() {
+        return agree;
+    }
+
+    public FriendshipTip setAgree(boolean agree) {
+        this.agree = agree;
+        return this;
+    }
+
+
+    public boolean isIread() {
+        return iread;
+    }
+
+    public FriendshipTip setIread(boolean iread) {
+        this.iread = iread;
+        return this;
+    }
+
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public FriendshipTip setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
+        return this;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public FriendshipTip setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+        return this;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public FriendshipTip setNickName(String nickName) {
+        this.nickName = nickName;
         return this;
     }
 }

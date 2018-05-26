@@ -14,7 +14,10 @@
             <cover-image src="../Resources/cgift.png" class="cover-gift"></cover-image>
 
             <cover-view class="cover-friends-background"></cover-view>
-            <cover-view class="cover-friends">
+            <cover-view wx:if="{{hasFriend}}" class="cover-friends">
+                {{addFriends}}
+            </cover-view>
+            <cover-view wx:if="{{!hasFriend}}" class="cover-friends" bindtap='askFriend'>
                 {{addFriends}}
             </cover-view>
 

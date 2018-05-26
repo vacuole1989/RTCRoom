@@ -14,6 +14,7 @@ App({
     globalData: {
         userInfo: {},
         contactUserInfo: {},
-        stopTime: 0
+        stopTime: 0,
+        msgCount:0
     }
 })
