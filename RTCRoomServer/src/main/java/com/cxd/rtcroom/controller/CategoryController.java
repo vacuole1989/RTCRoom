@@ -1,9 +1,8 @@
 package com.cxd.rtcroom.controller;
 
+
 import com.cxd.rtcroom.bean.Category;
-import com.cxd.rtcroom.bean.Video;
 import com.cxd.rtcroom.dao.CategoryRepository;
-import com.cxd.rtcroom.dao.VideoRepository;
 import com.cxd.rtcroom.dto.JSONResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/app/{appId}")

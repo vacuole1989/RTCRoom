@@ -1,0 +1,21 @@
+<view class="main">
+    <view class="title">发表新文章</view>
+    <form bindsubmit="bindFormSubmit" bindreset="bindFormReset">
+        <view>标题：</view>
+        <view>
+            <input placeholder="" />
+        </view>
+        <view>描述：</view>
+        <view>
+            <input placeholder="" />
+        </view>
+        <view>内容：</view>
+        <view>
+            <textarea />
+        </view>
+        <view class="btn-area">
+            <button form-type="submit" class="submit">提交</button>
+            <button form-type="reset" class="clear">清空</button>
+        </view>
+    </form>
+</view>

@@ -2,7 +2,7 @@ package com.cxd.rtcroom.dto;
 
 import com.alibaba.fastjson.JSONObject;
 
-import java.io.*;
+import java.io.Serializable;
 
 public class ResultDto implements Serializable{
     private Object code;

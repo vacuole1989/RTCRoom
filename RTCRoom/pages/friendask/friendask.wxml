@@ -1,0 +1,22 @@
+<view class="container chat">
+    <view class="chat-item flex-wrp" wx:for="{{askFriends}}" wx:key="seqId">
+        <view class="avatar flex-item">
+            <image src="{{item.avatarUrl}}"></image>
+        </view>
+        <view class="chat-content flex-item">
+            <view class="chat-source">
+                <text class="chatmate">{{item.nickName}}</text>
+            </view>
+            <text class="chat-txt">请求成为好友</text>
+        </view>
+        <view class="aggrebtn" wx:if="{{!item.iread}}">
+            <button bindtap='agree' data-seqid="{{item.seqId}}">同意</button>
+        </view>
+        <view class="commentInput" wx:if="{{!item.iread}}">
+            <button bindtap='notagree' data-seqid="{{item.seqId}}">拒绝</button>
+        </view>
+        <view class="agreemsg" wx:if="{{item.iread}}">{{item.agree?'同意':'拒绝'}}</view>
+
+    </view>
+
+</view>

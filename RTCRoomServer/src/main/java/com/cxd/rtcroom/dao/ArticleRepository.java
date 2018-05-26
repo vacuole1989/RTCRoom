@@ -2,7 +2,6 @@ package com.cxd.rtcroom.dao;
 
 
 import com.cxd.rtcroom.bean.Article;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,8 +1,12 @@
 package com.cxd.rtcroom.controller;
 
+
 import com.cxd.rtcroom.bean.Article;
+import com.cxd.rtcroom.bean.UserInfo;
 import com.cxd.rtcroom.dao.ArticleRepository;
+import com.cxd.rtcroom.dao.UserInfoRepository;
 import com.cxd.rtcroom.dto.JSONResult;
+import com.cxd.rtcroom.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -24,6 +29,8 @@ public class ArticleController {
     private RestTemplate restTemplate;
     @Autowired
     private ArticleRepository articleRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
 
     @RequestMapping("/getLastArticleList")
@@ -38,6 +45,24 @@ public class ArticleController {
 
         List<Article> byUserSeqId = articleRepository.findNewArticleList(0L, article.getSeqId(),"%"+article.getTitle()+"%", 5);
         return new JSONResult(true, "查找成功", byUserSeqId);
+
+    }
+
+
+    @RequestMapping("/sendArticle")
+    public JSONResult sendArticle(@PathVariable String appId, @RequestBody Article article) {
+
+        UserInfo userInfo = userInfoRepository.findOne(article.getUserSeqId());
+        article.setAvatarUrl(userInfo.getAvatarUrl());
+        article.setCategorySeqId(0);
+        article.setClickTimes(0);
+        article.setCommentCounts(0);
+        article.setCreateTime(DateUtil.format(new Date()));
+        article.setModifyTime(DateUtil.format(new Date()));
+        article.setNickName(userInfo.getNickName());
+
+        Article save = articleRepository.save(article);
+        return new JSONResult(true, "查找成功", save);
 
     }
 

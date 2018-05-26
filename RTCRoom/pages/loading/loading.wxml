@@ -1,0 +1,7 @@
+<view animation="{{animationData}}" style="background:#71E3FD;height:100%;width:100%"></view>
+<view animation="{{animationData2}}" class="textView">
+<text class="{{color[0]?'white':'black'}}">正</text>
+<text class="{{color[1]?'white':'black'}}">在</text>
+<text class="{{color[2]?'white':'black'}}">匹</text>
+<text class="{{color[3]?'white':'black'}}">配</text>
+<text class="{{color[4]?'white':'black'}}">中</text></view>

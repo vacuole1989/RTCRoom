@@ -1,0 +1,15 @@
+.textView{
+    position: absolute;
+    top:calc(50% - 50rpx);
+    left: 0;
+    text-align: center;
+    width: 100%;
+    font-size: 50rpx;
+    font-family: '幼圆';
+}
+.white{
+    color: white;
+}
+.black{
+    color: black;
+}
