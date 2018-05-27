@@ -1,17 +1,11 @@
 package com.cxd.rtcroom.controller;
 
 
-import com.cxd.rtcroom.bean.AppTag;
 import com.cxd.rtcroom.bean.Friendship;
 import com.cxd.rtcroom.bean.FriendshipTip;
 import com.cxd.rtcroom.bean.UserInfo;
-import com.cxd.rtcroom.dao.AppTagRepository;
-import com.cxd.rtcroom.dao.FriendshipRepository;
-import com.cxd.rtcroom.dao.FriendshipTipRepository;
-import com.cxd.rtcroom.dao.UserInfoRepository;
+import com.cxd.rtcroom.dao.*;
 import com.cxd.rtcroom.dto.JSONResult;
-import com.cxd.rtcroom.tls.tls_sigature.tls_sigature;
-import com.cxd.rtcroom.util.Config;
 import com.cxd.rtcroom.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.*;
 
 
@@ -40,41 +33,37 @@ public class FriendController {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private AppTagRepository appTagRepository;
+    @Autowired
+    private ChatMsgRepository chatMsgRepository;
 
 
     @RequestMapping("/getFriends")
-    public JSONResult getFriends(@PathVariable String appId, String code) {
-        AppTag appTag = appTagRepository.findOne(appId);
-        Map map = restTemplate.getForObject("{sessionkey}?appid={APPID}&secret={SECRET}&js_code={JSCODE}&grant_type=authorization_code", Map.class, SESSION_KEY, appTag.getAppId(), appTag.getAppSecret(), code);
-
-        if (null != map.get("openid")) {
-            String openid = map.get("openid") + "";
-            UserInfo userInfoByOpenId = userInfoRepository.findUserInfoByOpenId(openid);
-            List<UserInfo> friends = friendshipRepository.findFriends(userInfoByOpenId.getSeqId());
-            return new JSONResult(true, "查找成功", friends);
-        } else {
-            return new JSONResult(false, "查找失败");
+    public JSONResult getFriends(@PathVariable String appId, long seqId) {
+        List<UserInfo> friends = friendshipRepository.findFriends(seqId,seqId);
+        for (UserInfo friend : friends) {
+            long unReadChatMsgCount = chatMsgRepository.findUnReadChatMsgCount(friend.getSeqId(),seqId);
+            friend.setUnRead(unReadChatMsgCount);
         }
-
-
+        return new JSONResult(true, "查找成功", friends);
     }
 
-    @RequestMapping("/getFriendById")
-    public JSONResult getFriends(@PathVariable String appId, long seqId) {
+    @RequestMapping("/getUserInfoById")
+    public JSONResult getFriendById(@PathVariable String appId, long seqId) {
         UserInfo userInfo = userInfoRepository.findOne(seqId);
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("friend", userInfo);
-        return new JSONResult(true, "查找成功", map);
+        return new JSONResult(true, "查找成功", userInfo);
 
     }
 
     @RequestMapping("/getFriendTipCount")
     public JSONResult getFriendTipCount(@PathVariable String appId, long seqId) {
         long l = friendshipTipRepository.countByUserSeqIdAndIread(seqId, false);
+        long unReadChatMsgCount = chatMsgRepository.findAllUnReadChatMsgCount(seqId);
+        Map<String,Long> map=new HashMap<>();
+        map.put("tip",l);
+        map.put("read",unReadChatMsgCount);
+        map.put("all",unReadChatMsgCount+l);
 
-        return new JSONResult(true, "查找成功", l);
+        return new JSONResult(true, "查找成功", map);
 
     }
 
@@ -98,7 +87,6 @@ public class FriendController {
 
     @RequestMapping("/askFriend")
     public JSONResult askFriend(@PathVariable String appId, long userSeqId, long friendSeqId) {
-
 
         UserInfo userInfo = userInfoRepository.findOne(userSeqId);
 
@@ -130,25 +118,28 @@ public class FriendController {
         if (agree) {
 
             List<Friendship> ifFriend = friendshipRepository.findIfFriend(friendshipTip.getUserSeqId(), friendshipTip.getFromUserId(), friendshipTip.getFromUserId(), friendshipTip.getUserSeqId());
-            if(ifFriend.size()>0){
+            if (ifFriend.size() > 0) {
                 friendshipTip.setIread(true);
                 friendshipTip.setAgree(agree);
                 friendshipTip.setModifyTime(DateUtil.format(new Date()));
-                 friendshipTipRepository.save(friendshipTip);
+                friendshipTipRepository.save(friendshipTip);
                 return new JSONResult(false, "你们已经是好友", null);
             }
 
             List<Friendship> friendships = new ArrayList<>();
-            friendships.add(new Friendship()
-                    .setFriendSeqId(friendshipTip.getUserSeqId())
-                    .setOwnerSeqId(friendshipTip.getFromUserId())
-                    .setCreateTime(DateUtil.format(new Date()))
-                    .setModifyTime(DateUtil.format(new Date())));
-            friendships.add(new Friendship()
-                    .setFriendSeqId(friendshipTip.getFromUserId())
-                    .setOwnerSeqId(friendshipTip.getUserSeqId())
-                    .setCreateTime(DateUtil.format(new Date()))
-                    .setModifyTime(DateUtil.format(new Date())));
+            if(friendshipTip.getUserSeqId()<=friendshipTip.getFromUserId()){
+                friendships.add(new Friendship()
+                        .setFriendSeqId(friendshipTip.getUserSeqId())
+                        .setOwnerSeqId(friendshipTip.getFromUserId())
+                        .setCreateTime(DateUtil.format(new Date()))
+                        .setModifyTime(DateUtil.format(new Date())));
+            }else{
+                friendships.add(new Friendship()
+                        .setFriendSeqId(friendshipTip.getFromUserId())
+                        .setOwnerSeqId(friendshipTip.getUserSeqId())
+                        .setCreateTime(DateUtil.format(new Date()))
+                        .setModifyTime(DateUtil.format(new Date())));
+            }
             friendshipRepository.save(friendships);
         }
 
@@ -158,22 +149,6 @@ public class FriendController {
         FriendshipTip save = friendshipTipRepository.save(friendshipTip);
 
         return new JSONResult(true, "查找成功", save);
-
-    }
-
-
-    @RequestMapping("/IMLogin")
-    public JSONResult IMLogin(@PathVariable String appId, long mySeqId) {
-        Map<String, Object> map = new HashMap<>();
-        tls_sigature.GenTLSSignatureResult result;
-        try {
-            result = tls_sigature.GenTLSSignatureEx(Config.IM.IM_SDKAPPID, "wjsd_user_" + mySeqId, Config.IM.PRIVATEKEY);
-            map.put("userSig", result.urlSig);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-            e.printStackTrace();
-        }
-        return new JSONResult(true, "查找成功", map);
 
     }
 

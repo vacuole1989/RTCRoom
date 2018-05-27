@@ -30,6 +30,8 @@ public class UserInfo implements Serializable {
     private String pushUrl;
     @Transient
     private String playUrl;
+    @Transient
+    private long unRead;
 
     public long getSeqId() {
         return seqId;
@@ -163,6 +165,16 @@ public class UserInfo implements Serializable {
 
     public UserInfo setOnlineStatusTime(String onlineStatusTime) {
         this.onlineStatusTime = onlineStatusTime;
+        return this;
+    }
+
+
+    public long getUnRead() {
+        return unRead;
+    }
+
+    public UserInfo setUnRead(long unRead) {
+        this.unRead = unRead;
         return this;
     }
 }

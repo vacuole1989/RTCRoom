@@ -10,12 +10,7 @@ import com.cxd.rtcroom.dao.OnlineUserRepository;
 import com.cxd.rtcroom.dao.SysConfigRepository;
 import com.cxd.rtcroom.dao.UserInfoRepository;
 import com.cxd.rtcroom.dto.JSONResult;
-import com.cxd.rtcroom.tls.tls_sigature.tls_sigature;
-import com.cxd.rtcroom.util.Config;
 import com.cxd.rtcroom.util.DateUtil;
-import com.cxd.rtcroom.util.HttpUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -82,28 +77,6 @@ public class UserController {
                 userInfoByOpenId.setNickName(userInfo.getNickName());
                 userInfoByOpenId.setProvince(userInfo.getProvince());
                 userInfoRepository.save(userInfoByOpenId);
-
-
-                /**
-                 * 导入账号到腾讯云通讯
-                 */
-                tls_sigature.GenTLSSignatureResult resultAdmin;
-                try {
-                    resultAdmin = tls_sigature.GenTLSSignatureEx(Config.IM.IM_SDKAPPID, "admin", Config.IM.PRIVATEKEY);
-                    String userImputUrl = "https://console.tim.qq.com/v4/im_open_login_svc/account_import?usersig=" + resultAdmin.urlSig + "&identifier=admin&sdkappid=" + Config.IM.IM_SDKAPPID + "&random=" + (int) (Math.random() * 100000) + "&contenttype=json";
-                    Map<String, String> postmap = new HashMap<>();
-                    postmap.put("Identifier", "wjsd_user_" + userInfo.getSeqId());
-                    postmap.put("Nick", userInfo.getNickName());
-                    postmap.put("FaceUrl", userInfo.getAvatarUrl());
-                    Gson gson=new GsonBuilder().disableHtmlEscaping().create();
-                    String post = HttpUtil.httpsRequest(userImputUrl, "POST", gson.toJson(postmap));
-                    LOGGER.info("导入用户到腾讯云通信返回:"+post);
-                } catch (IOException e) {
-                    LOGGER.error(e.getMessage());
-                    e.printStackTrace();
-                }
-
-
 
                 BeanUtils.copyProperties(userInfoByOpenId, userInfo);
             } else {

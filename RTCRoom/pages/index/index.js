@@ -9,7 +9,7 @@ Page({
     data: {
         time: 20,
         userInfo: {},
-        msgCount: 0,
+        msgCount: {},
         timer: null,
         pageHide: false
     },
@@ -125,7 +125,7 @@ Page({
         _this.setData({
             userInfo: app.globalData.userInfo
         })
-        _this.cycleMsg();
+        this.cycleMsg();
         this.setData({
             pageHide: false
         })
@@ -148,10 +148,12 @@ Page({
                         msgCount: res.data.data
                     })
                     app.globalData.msgCount = _this.data.msgCount;
-                    if (!_this.data.pageHide) {
-
+                    
+                },
+                complete:function(){
+                    // if (!_this.data.pageHide) {
                         _this.cycleMsg();
-                    }
+                    // }
                 }
             })
         }.bind(this), 1000);
@@ -164,11 +166,11 @@ Page({
         wx.setKeepScreenOn({
             keepScreenOn: true
         })
+        
         this.setData({
             pageHide: false
         })
-
-
+        
     },
 
     /**

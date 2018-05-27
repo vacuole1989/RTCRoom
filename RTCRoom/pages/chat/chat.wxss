@@ -13,6 +13,7 @@ page {
     background: #fff;
     padding: 25rpx 25rpx 25rpx 0;
     border-bottom: solid 1px #ebebeb;
+    position: relative;
 }
 
 .chat-item  image {
@@ -72,4 +73,16 @@ page {
     line-height: 34rpx;
 }
 
-
+.msgTip {
+    position: absolute;
+     min-width: 40rpx; 
+    height: 40rpx;
+    right: 30rpx;
+    top: calc(50% - 20rpx);
+    background-color: red;
+    border-radius: 20rpx;
+    color: white;
+    text-align: center;
+    font-size: 30rpx;
+    padding:0rpx 6rpx;
+}

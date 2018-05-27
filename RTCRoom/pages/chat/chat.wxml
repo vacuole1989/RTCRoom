@@ -5,9 +5,10 @@
         </view>
         <view class="chat-content flex-item">
             <view class="chat-sourcetop">
-                <text class="chatmatetop">好友请求（{{msgCount}}）</text>
+                <text class="chatmatetop">好友请求</text>
             </view>
         </view>
+        <view class="msgTip" wx:if="{{msgCount.tip>0}}">{{msgCount.tip}}</view>
     </navigator>
     <view class="chat-item flex-wrp">
         <view class="avatar flex-item">
@@ -29,6 +30,7 @@
             </view>
             <text class="chat-txt">已经成为好友</text>
         </view>
+        <view class="msgTip" wx:if="{{item.unRead>0}}">{{item.unRead}}</view>
     </navigator>
 
 </view>

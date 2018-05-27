@@ -34,7 +34,7 @@ Page({
                 wx.request({
                     url: config.url + '/sendComment',
                     data: {
-                        code: resl.code,
+                        userSeqId: app.globalData.userInfo.seqId,
                         articleSeqId: _this.data.article.seqId,
                         content: con
                     },

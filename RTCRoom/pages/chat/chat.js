@@ -3,7 +3,8 @@ const config = require('../../config.js');
 Page({
     data: {
         friends: [],
-        msgCount:0
+        msgCount: {},
+        pageHide: false
     },
     cycleMsg: function () {
         setTimeout(function () {
@@ -11,19 +12,26 @@ Page({
             _this.setData({
                 msgCount: app.globalData.msgCount
             })
-            _this.cycleMsg();
+
+            // if (!_this.data.pageHide) {
+                _this.cycleMsg();
+            // }
         }.bind(this), 1000);
     },
     onLoad: function () {
+        this.cycleMsg();
+        this.setData({
+            pageHide: false
+        })
         var _this = this;
         _this.setData({
             msgCount: app.globalData.msgCount
         })
-        _this.cycleMsg();
+        
         wx.login({
             success: function (res) {
                 wx.request({
-                    url: config.url + '/getFriends?code=' + res.code,
+                    url: config.url + '/getFriends?seqId=' + app.globalData.userInfo.seqId,
                     success: function (ress) {
                         _this.setData({
                             friends: ress.data.data
@@ -31,6 +39,22 @@ Page({
                     }
                 })
             }
+        })
+    },
+    onUnload: function () {
+        this.setData({
+            pageHide: true
+        })
+    },
+    onShow: function () {
+        this.setData({
+            pageHide: false
+        })
+        
+    },
+    onHide: function () {
+        this.setData({
+            pageHide: true
         })
     }
 })

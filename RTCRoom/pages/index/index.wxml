@@ -6,7 +6,7 @@
             <cover-image class="right_top_btn" src="../Resources/gamepad.png" bindtap="onGameClick"></cover-image>
             <cover-image class="left_top_btn" src="{{userInfo.avatarUrl}}" bindtap="onPersonClick"></cover-image>
             <cover-image class="left_bottom_btn" src="../Resources/chat.png" bindtap="onChatClick"></cover-image>
-            <cover-view class="msgTip" wx:if="{{msgCount>0}}">{{msgCount}}
+            <cover-view class="msgTip" wx:if="{{msgCount.all>0}}">{{msgCount.all}}
             </cover-view>
             <cover-image class="right_bottom_btn" src="../Resources/dots.png" bindtap="onMoreClick"></cover-image>
             <cover-view class="cover-input" bindtap="onSearchClick">

@@ -1,7 +1,6 @@
 package com.cxd.rtcroom;
 
 
-import com.cxd.rtcroom.util.WxMessageConverter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
@@ -23,7 +22,7 @@ public class App extends SpringBootServletInitializer {
 	public RestTemplate restTemplate(){
 
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().add(new WxMessageConverter());
+		restTemplate.getMessageConverters().add(getMappingJackson2HttpMessageConverterJson());
 		return restTemplate;
 	}
 
@@ -33,12 +32,20 @@ public class App extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public MappingJackson2HttpMessageConverter getMappingJackson2HttpMessageConverter() {
+	public MappingJackson2HttpMessageConverter getMappingJackson2HttpMessageConverterJson() {
 		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-		//设置中文编码格式
-		List<MediaType> list = new ArrayList<>();
-		list.add(MediaType.APPLICATION_JSON_UTF8);
-		mappingJackson2HttpMessageConverter.setSupportedMediaTypes(list);
+		List<MediaType> mediaTypes = new ArrayList<>();
+		mediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+		mediaTypes.add(MediaType.TEXT_PLAIN);
+		mappingJackson2HttpMessageConverter.setSupportedMediaTypes(mediaTypes);
+		return mappingJackson2HttpMessageConverter;
+	}
+	@Bean
+	public MappingJackson2HttpMessageConverter getMappingJackson2HttpMessageConverterText() {
+		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+		List<MediaType> mediaTypes = new ArrayList<>();
+		mediaTypes.add(MediaType.TEXT_PLAIN);
+		mappingJackson2HttpMessageConverter.setSupportedMediaTypes(mediaTypes);
 		return mappingJackson2HttpMessageConverter;
 	}
 }
