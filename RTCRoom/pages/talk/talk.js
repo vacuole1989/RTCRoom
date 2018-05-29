@@ -14,16 +14,19 @@ Page({
         stopTime: 60,
         userInfo: {},
         contactUserInfo: {},
-        addFriends:"请求加好友",
-        hasFriend:false
+        addFriend: "请求加好友",
+        hasFriend: false,
+        showAskFriend: false,
+        fromChat: false,
+        isFinish: false
     },
-    askFriend:function(){
+    askFriend: function () {
         var _this = this;
         wx.request({
             url: config.url + '/askFriend?userSeqId=' + app.globalData.userInfo.seqId + '&friendSeqId=' + _this.data.contactUserInfo.seqId,
             success: function (res) {
                 console.info(res);
-                if(res.data.success){
+                if (res.data.success) {
                     wx.showModal({
                         title: '提示',
                         content: '申请好友成功！',
@@ -32,7 +35,7 @@ Page({
                         }
                     });
                 }
-                
+
             }
         });
     },
@@ -49,9 +52,15 @@ Page({
                             _this.setData({
                                 stopTime: 0
                             });
-                            wx.reLaunch({
-                                url: '../index/index',
-                            });
+                            if (!_this.data.isFinish) {
+                                _this.setData({
+                                    isFinish: true
+                                })
+                                wx.navigateBack();
+                            }
+                            // wx.reLaunch({
+                            //     url: '../index/index',
+                            // });
                         }
                     });
                 } else if (res.cancel) {
@@ -77,7 +86,7 @@ Page({
         }
     },
     munTime: function () {
-        this.timer = setTimeout(function () {
+        this.data.timer = setTimeout(function () {
             if (this.data.stopTime > 0) {
                 var tt = this.data.stopTime - 1;
                 this.setData({
@@ -85,30 +94,91 @@ Page({
                 });
                 this.munTime();
             } else {
-                wx.reLaunch({
-                    url: '../index/index',
-                });
+                if (!_this.data.isFinish) {
+                    _this.setData({
+                        isFinish: true
+                    })
+                    wx.navigateBack();
+                }
+                // wx.reLaunch({
+                //     url: '../index/index',
+                // });
             }
         }.bind(this), 1000);
     },
     onHeartBeat: function () {
+        console.info('heartbeat');
         var _this = this;
         wx.request({
-            url: config.url + '/heartBeat?seqId=' + app.globalData.userInfo.seqId,
+            url: config.url + '/heartBeat?seqId=' + app.globalData.userInfo.seqId + '&isFriend=' + _this.data.hasFriend,
             success: function (res) {
-                if (res.data.data) {
+                if (res.data.data.online) {
                     if (_this.data.stopTime > 0) {
+                        if (!_this.data.hasFriend && res.data.data.friend) {
+                            if (res.data.data.friendly) {
+                                _this.setData({
+                                    hasFriend: true,
+                                    addFriend: '已经是好友'
+                                })
+                            } else {
+                                _this.setData({
+                                    hasFriend: false,
+                                    addFriend: '请求加好友'
+                                })
+                            }
+                        }
+
+                        _this.onShowAskFriend(res);
                         setTimeout(function () {
                             this.onHeartBeat();
                         }.bind(_this), 1000);
                     }
                 } else {
-                    wx.reLaunch({
-                        url: '../index/index',
-                    });
+                    if (!_this.data.isFinish) {
+                        _this.setData({
+                            isFinish: true
+                        })
+                        wx.navigateBack();
+                    }
                 }
             }
         });
+    },
+    onShowAskFriend: function (res) {
+        var _this = this;
+        if (!_this.data.showAskFriend && !_this.data.hasFriend && res.data.data.friend) {
+            _this.setData({
+                showAskFriend: true
+            })
+            wx.showModal({
+                title: '提示',
+                content: '对方想加你好友，是否同意？',
+                cancelText: '以后再说',
+                cancelColor: '#CCCCCC',
+                confirmText: '同意',
+                confirmColor: '#00B26A',
+                success: function (resm) {
+                    if (resm.confirm) {
+                        wx.request({
+                            url: config.url + '/agreeFriend?seqId=' + res.data.data.friend.seqId + '&agree=true',
+                            success: function (resf) {
+                                if (resf.data.success) {
+                                    wx.showModal({
+                                        title: '提示',
+                                        content: '你们已经成为好友，以后可以直接在好友界面发起视频。',
+                                    })
+                                } else {
+                                    wx.showModal({
+                                        title: '提示',
+                                        content: resf.data.message
+                                    })
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
     },
     onPushInit: function () {
         var _this = this;
@@ -117,8 +187,10 @@ Page({
             playUrl: app.globalData.userInfo.playUrl
         });
         _this.onPlayAll();
-        _this.onHeartBeat();
-        _this.munTime();
+        if (!_this.data.fromChat) {
+            _this.onHeartBeat();
+            _this.munTime();
+        }
     },
     onPushEvent: function (e) {
         console.info("推流状态：" + e.detail.code + "-" + e.detail.message);
@@ -148,20 +220,21 @@ Page({
         this.setData({
             stopTime: app.globalData.stopTime,
             userInfo: app.globalData.userInfo,
-            contactUserInfo: app.globalData.contactUserInfo
+            contactUserInfo: app.globalData.contactUserInfo,
+            fromChat: app.globalData.fromChat
         });
-        if (this.data.contactUserInfo.gender==1){
-          this.setData({
-            contactGender:'男'
-          });
-        } else if (this.data.contactUserInfo.gender == 2){
-          this.setData({
-            contactGender: '女'
-          });
-        }else{
-          this.setData({
-            contactGender: '未知'
-          });
+        if (this.data.contactUserInfo.gender == 1) {
+            this.setData({
+                contactGender: '男'
+            });
+        } else if (this.data.contactUserInfo.gender == 2) {
+            this.setData({
+                contactGender: '女'
+            });
+        } else {
+            this.setData({
+                contactGender: '未知'
+            });
         }
 
 
@@ -170,15 +243,15 @@ Page({
         wx.request({
             url: config.url + '/getIfFriend?userSeqId=' + app.globalData.userInfo.seqId + '&friendSeqId=' + _this.data.contactUserInfo.seqId,
             success: function (res) {
-                if(res.data.success){
+                if (res.data.success) {
                     _this.setData({
-                        hasFriend:true,
-                        addFriends:'已经是好友'
+                        hasFriend: true,
+                        addFriend: '已经是好友'
                     })
-                }else{
+                } else {
                     _this.setData({
                         hasFriend: false,
-                        addFriends: '请求加好友'
+                        addFriend: '请求加好友'
                     })
                 }
             }
@@ -213,14 +286,13 @@ Page({
      */
     onHide: function () {
         console.info("3聊天页面隐藏了");
-        clearTimeout(this.timer);
-        this.onStopAll();
-        wx.request({
-            url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,
-            success: function (res) {
+        // this.onStopAll();
+        // wx.request({
+        //     url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,
+        //     success: function (res) {
 
-            }
-        });   
+        //     }
+        // });
         wx.setKeepScreenOn({
             keepScreenOn: false,
         });
@@ -231,8 +303,8 @@ Page({
      */
     onUnload: function () {
         console.info("4聊天页面卸载了");
-        
-        clearTimeout(this.timer);
+
+        clearTimeout(this.data.timer);
         this.onStopAll();
         wx.request({
             url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,

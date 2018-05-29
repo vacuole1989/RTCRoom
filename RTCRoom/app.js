@@ -15,6 +15,7 @@ App({
         userInfo: {},
         contactUserInfo: {},
         stopTime: 0,
-        msgCount:{}
+        msgCount:{},
+        fromChat:false
     }
 })

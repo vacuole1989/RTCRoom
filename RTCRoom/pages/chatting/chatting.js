@@ -23,6 +23,22 @@ Page({
             content: ''
         })
     },
+    sendVideo:function(){
+        var _this=this;
+        wx.request({
+            url: config.url +'/getPlayUrl?seqId='+_this.data.friend.seqId,
+            success:function(res){
+                app.globalData.userInfo.playUrl = res.data.data;
+                app.globalData.contactUserInfo = _this.data.friend;
+                app.globalData.stopTime = 60;
+                app.globalData.fromChat = true;
+                wx.redirectTo({
+                    url: '../talk/talk',
+                })
+            }
+        })
+        
+    },
     onLoad: function (options) {
         console.info('cload')
         this.setData({

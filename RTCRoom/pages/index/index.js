@@ -11,7 +11,8 @@ Page({
         userInfo: {},
         msgCount: {},
         timer: null,
-        pageHide: false
+        pageHide: false,
+        isAsked: false
     },
     onPersonClick: function () {
         wx.navigateTo({
@@ -149,6 +150,37 @@ Page({
                     _this.setData({
                         msgCount: res.data.data
                     })
+                    if (_this.data.msgCount.asked) {
+                        if (!_this.data.isAsked) {
+                            _this.setData({
+                                isAsked: true
+                            })
+                            wx.showModal({
+                                title: '提示',
+                                content: '【'+_this.data.msgCount.asked.nickName+'】邀请你视频！',
+                                cancelText: '拒绝',
+                                cancelColor: '#E93027',
+                                confirmText: '同意',
+                                confirmColor: '#00B26A',
+                                success:function(resm){
+                                    if(resm.confirm){
+                                        app.globalData.userInfo.playUrl = _this.data.msgCount.asked.playUrl;
+                                        app.globalData.contactUserInfo = _this.data.friend;
+                                        app.globalData.stopTime = 60;
+                                        app.globalData.fromChat = true;
+                                        wx.navigateTo({
+                                            url: '../talk/talk',
+                                        })
+                                    }else{
+
+                                    }
+                                },
+                                complete:function(res){
+                                    
+                                }
+                            }) 
+                        }
+                    }
                 },
                 complete: function () {
                     if (!_this.data.pageHide) {
@@ -197,5 +229,8 @@ Page({
         wx.setKeepScreenOn({
             keepScreenOn: false,
         })
+    },
+    onShareAppMessage: function () {
+
     }
 })

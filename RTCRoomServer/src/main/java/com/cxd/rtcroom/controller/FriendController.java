@@ -1,6 +1,7 @@
 package com.cxd.rtcroom.controller;
 
 
+import com.cxd.rtcroom.bean.ChatAsk;
 import com.cxd.rtcroom.bean.Friendship;
 import com.cxd.rtcroom.bean.FriendshipTip;
 import com.cxd.rtcroom.bean.UserInfo;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -35,13 +39,15 @@ public class FriendController {
     private AppTagRepository appTagRepository;
     @Autowired
     private ChatMsgRepository chatMsgRepository;
+    @Autowired
+    private ChatAskRepository chatAskRepository;
 
 
     @RequestMapping("/getFriends")
     public JSONResult getFriends(@PathVariable String appId, long seqId) {
-        List<UserInfo> friends = friendshipRepository.findFriends(seqId,seqId);
+        List<UserInfo> friends = friendshipRepository.findFriends(seqId, seqId);
         for (UserInfo friend : friends) {
-            long unReadChatMsgCount = chatMsgRepository.findUnReadChatMsgCount(friend.getSeqId(),seqId);
+            long unReadChatMsgCount = chatMsgRepository.findUnReadChatMsgCount(friend.getSeqId(), seqId);
             friend.setUnRead(unReadChatMsgCount);
         }
         return new JSONResult(true, "查找成功", friends);
@@ -58,10 +64,19 @@ public class FriendController {
     public JSONResult getFriendTipCount(@PathVariable String appId, long seqId) {
         long l = friendshipTipRepository.countByUserSeqIdAndIread(seqId, false);
         long unReadChatMsgCount = chatMsgRepository.findAllUnReadChatMsgCount(seqId);
-        Map<String,Long> map=new HashMap<>();
-        map.put("tip",l);
-        map.put("read",unReadChatMsgCount);
-        map.put("all",unReadChatMsgCount+l);
+        Map<String, Object> map = new HashMap<>();
+        map.put("tip", l);
+        map.put("read", unReadChatMsgCount);
+        map.put("all", unReadChatMsgCount + l);
+
+
+        List<ChatAsk> ifAsked = chatAskRepository.findIFAsked(seqId, DateUtil.format(System.currentTimeMillis() - 1000));
+        if(ifAsked.size()>0){
+            map.put("asked",ifAsked.get(0));
+        }else{
+            map.put("asked",false);
+        }
+
 
         return new JSONResult(true, "查找成功", map);
 
@@ -111,12 +126,12 @@ public class FriendController {
     }
 
 
-    @RequestMapping("/AgreeFriend")
+    @RequestMapping("/agreeFriend")
     public JSONResult AgreeFriend(@PathVariable String appId, long seqId, boolean agree) {
 
         FriendshipTip friendshipTip = friendshipTipRepository.findOne(seqId);
+        Friendship friendships = null;
         if (agree) {
-
             List<Friendship> ifFriend = friendshipRepository.findIfFriend(friendshipTip.getUserSeqId(), friendshipTip.getFromUserId(), friendshipTip.getFromUserId(), friendshipTip.getUserSeqId());
             if (ifFriend.size() > 0) {
                 friendshipTip.setIread(true);
@@ -126,29 +141,20 @@ public class FriendController {
                 return new JSONResult(false, "你们已经是好友", null);
             }
 
-            List<Friendship> friendships = new ArrayList<>();
-            if(friendshipTip.getUserSeqId()<=friendshipTip.getFromUserId()){
-                friendships.add(new Friendship()
-                        .setFriendSeqId(friendshipTip.getUserSeqId())
-                        .setOwnerSeqId(friendshipTip.getFromUserId())
-                        .setCreateTime(DateUtil.format(new Date()))
-                        .setModifyTime(DateUtil.format(new Date())));
-            }else{
-                friendships.add(new Friendship()
-                        .setFriendSeqId(friendshipTip.getFromUserId())
-                        .setOwnerSeqId(friendshipTip.getUserSeqId())
-                        .setCreateTime(DateUtil.format(new Date()))
-                        .setModifyTime(DateUtil.format(new Date())));
+            if (friendshipTip.getUserSeqId() <= friendshipTip.getFromUserId()) {
+                friendships = new Friendship().setFriendSeqId(friendshipTip.getUserSeqId()).setOwnerSeqId(friendshipTip.getFromUserId());
+            } else {
+                friendships = new Friendship().setFriendSeqId(friendshipTip.getFromUserId()).setOwnerSeqId(friendshipTip.getUserSeqId());
             }
-            friendshipRepository.save(friendships);
+            friendshipRepository.save(friendships.setCreateTime(DateUtil.format(new Date())).setModifyTime(DateUtil.format(new Date())));
         }
 
         friendshipTip.setIread(true);
         friendshipTip.setAgree(agree);
         friendshipTip.setModifyTime(DateUtil.format(new Date()));
-        FriendshipTip save = friendshipTipRepository.save(friendshipTip);
+        friendshipTipRepository.save(friendshipTip);
 
-        return new JSONResult(true, "查找成功", save);
+        return new JSONResult(true, "查找成功", friendships);
 
     }
 

@@ -38,6 +38,7 @@ Page({
                         app.globalData.userInfo.playUrl = res.data.data.playUrl;
                         app.globalData.contactUserInfo = res.data.data.contactUserInfo;
                         app.globalData.stopTime = res.data.data.stopTime;
+                        app.globalData.fromChat = false;
                         wx.redirectTo({
                             url: '../talk/talk',
                         })

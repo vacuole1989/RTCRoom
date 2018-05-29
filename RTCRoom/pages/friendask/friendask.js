@@ -12,7 +12,7 @@ Page({
     agree: function (e) {
         var _this=this;
         wx.request({
-            url: config.url + "/AgreeFriend?seqId=" + e.currentTarget.dataset.seqid + '&agree=true',
+            url: config.url + "/agreeFriend?seqId=" + e.currentTarget.dataset.seqid + '&agree=true',
             success: function (res) {
                 if (res.data.success) {
 
@@ -33,7 +33,7 @@ Page({
     notagree: function (e) {
         var _this = this;
         wx.request({
-            url: config.url + "/AgreeFriend?seqId=" + e.currentTarget.dataset.seqid + '&agree=false',
+            url: config.url + "/agreeFriend?seqId=" + e.currentTarget.dataset.seqid + '&agree=false',
             success: function (res) {
                 if (res.data.success) {
                     wx.showModal({

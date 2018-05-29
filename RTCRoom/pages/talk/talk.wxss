@@ -83,3 +83,6 @@
     opacity: 0.5;
     left: 30rpx;
 }
+.hasFriend{
+    color: #00B26A;
+}

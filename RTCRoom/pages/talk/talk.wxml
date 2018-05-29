@@ -15,17 +15,17 @@
 
             <cover-view class="cover-friends-background"></cover-view>
             <cover-view wx:if="{{hasFriend}}" class="cover-friends">
-                {{addFriends}}
+                {{addFriend}}
             </cover-view>
-            <cover-view wx:if="{{!hasFriend}}" class="cover-friends" bindtap='askFriend'>
-                {{addFriends}}
+            <cover-view wx:if="{{!hasFriend}}" class="cover-friends hasFriend" bindtap='askFriend'>
+                {{addFriend}}
             </cover-view>
 
         </cover-view>
     </live-player>
     <live-pusher id="camera-push" autopush="true" background-mute="true" url="{{pushUrl}}"
                  bindstatechange="onPushEvent">
-        <cover-view class="cover-box">
+        <cover-view class="cover-box" wx:if="{{!fromChat}}">
             <cover-view class="cover-time">{{stopTime}}S</cover-view>
         </cover-view>
     </live-pusher>

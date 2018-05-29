@@ -9,7 +9,7 @@
     </view>
     <view class="commentInput">
         <input confirm-type="send" confirm-hold="{{true}}" value='{{content}}' bindconfirm='sendComment' bindinput='inputComment' />
-        <button bindtap='sendComment'>发送</button>
+        <button bindtap='sendVideo'>发视频</button>
     </view>
 
 </view>
