@@ -1,14 +1,8 @@
 package com.cxd.rtcroom.controller;
 
 
-import com.cxd.rtcroom.bean.AppTag;
-import com.cxd.rtcroom.bean.OnlineUser;
-import com.cxd.rtcroom.bean.SysConfig;
-import com.cxd.rtcroom.bean.UserInfo;
-import com.cxd.rtcroom.dao.AppTagRepository;
-import com.cxd.rtcroom.dao.OnlineUserRepository;
-import com.cxd.rtcroom.dao.SysConfigRepository;
-import com.cxd.rtcroom.dao.UserInfoRepository;
+import com.cxd.rtcroom.bean.*;
+import com.cxd.rtcroom.dao.*;
 import com.cxd.rtcroom.dto.JSONResult;
 import com.cxd.rtcroom.util.DateUtil;
 import org.slf4j.Logger;
@@ -48,6 +42,8 @@ public class UserController {
     private SysConfigRepository sysConfigRepository;
     @Autowired
     private AppTagRepository appTagRepository;
+    @Autowired
+    private FriendshipTipRepository friendshipTipRepository;
 
     @RequestMapping("/onLogin")
     public JSONResult onLogin(@PathVariable String appId, @RequestParam String code, @RequestBody UserInfo userInfo) {
@@ -192,6 +188,7 @@ public class UserController {
     @RequestMapping("/heartBeat")
     @Transactional(rollbackOn = Exception.class)
     public JSONResult heartbeat(@RequestParam long seqId) {
+        Map<String,Object> map=new HashMap<>();
         boolean online;
         OnlineUser one = onlineUserRepository.findOne(seqId);
         if (null != one && DateUtil.format(one.getExpireTime()).getTime() >= System.currentTimeMillis()) {
@@ -202,6 +199,12 @@ public class UserController {
         if (null != one && DateUtil.format(one.getExpireTime()).getTime() < System.currentTimeMillis()) {
             deleteExpireUser(one);
         }
+//        List<FriendshipTip> friendshipTips = friendshipTipRepository.findByUserSeqIdAndFromUserIdAndIread(one.getSeqId(), one.getContactSeqId(), false);
+//        if(friendshipTips.size()>0){
+//            map.put("friend",friendshipTips.get(0));
+//        }
+//        map.put("online",online);
+
         return new JSONResult(true, "心跳成功", online);
     }
 

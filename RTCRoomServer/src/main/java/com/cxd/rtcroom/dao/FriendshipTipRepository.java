@@ -10,8 +10,11 @@ public interface FriendshipTipRepository extends CrudRepository<FriendshipTip, L
 
 
     long countByUserSeqIdAndIread(long userSeqId,boolean iread);
+
     List<FriendshipTip> findByUserSeqIdOrderByCreateTimeDesc(long userSeqId);
 
     List<FriendshipTip> findByUserSeqIdAndFromUserId(long userSeqId,long fromUserId);
+
+    List<FriendshipTip> findByUserSeqIdAndFromUserIdAndIread(long userSeqId,long fromUserId,boolean iread);
 
 }

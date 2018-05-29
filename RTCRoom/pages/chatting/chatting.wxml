@@ -1,16 +1,15 @@
 <view class="main">
-     <view class="content" id="chatId">
-            <view class="classmsg" wx:for="{{msgs}}">
-                <view class="chatmsg {{item.fromUserSeqId==userInfo.seqId?'rightItem':'leftItem'}}">
-                    <image src='{{item.fromUserSeqId==userInfo.seqId?userInfo.avatarUrl:friend.avatarUrl}}'></image>
-                    <view class="text">{{item.content}}</view>
-                </view>
-            </view>  
-    </view> 
+    <view class="content" id="chatId">
+        <view class="classmsg {{item.fromUserSeqId==userInfo.seqId?'rightClass':'leftClass'}}" wx:for="{{msgs}}" wx:key="seqId">
+            <view class="chatmsg {{item.fromUserSeqId==userInfo.seqId?'rightItem':'leftItem'}}">
+                <image src='{{item.fromUserSeqId==userInfo.seqId?userInfo.avatarUrl:friend.avatarUrl}}'></image>
+                <view class="{{item.fromUserSeqId==userInfo.seqId?'rightChatbox':'leftChatbox'}} text">{{item.content}}</view>
+            </view>
+        </view>
+    </view>
     <view class="commentInput">
-        <input confirm-type="send" value='{{content}}' bindconfirm='sendComment' bindinput='inputComment' />
+        <input confirm-type="send" confirm-hold="{{true}}" value='{{content}}' bindconfirm='sendComment' bindinput='inputComment' />
         <button bindtap='sendComment'>发送</button>
     </view>
 
 </view>
-

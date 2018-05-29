@@ -121,11 +121,11 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        console.info('load')
         var _this = this;
         _this.setData({
             userInfo: app.globalData.userInfo
         })
-        this.cycleMsg();
         this.setData({
             pageHide: false
         })
@@ -134,12 +134,14 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady: function () {
+        console.info('ready')
         wx.setKeepScreenOn({
             keepScreenOn: true,
         })
     },
     cycleMsg: function () {
-        setTimeout(function () {
+        console.info('cycle')
+        this.data.timer = setTimeout(function () {
             var _this = this;
             wx.request({
                 url: config.url + '/getFriendTipCount?seqId=' + _this.data.userInfo.seqId,
@@ -147,13 +149,11 @@ Page({
                     _this.setData({
                         msgCount: res.data.data
                     })
-                    app.globalData.msgCount = _this.data.msgCount;
-                    
                 },
-                complete:function(){
-                    // if (!_this.data.pageHide) {
+                complete: function () {
+                    if (!_this.data.pageHide) {
                         _this.cycleMsg();
-                    // }
+                    }
                 }
             })
         }.bind(this), 1000);
@@ -162,21 +162,25 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function () {
+        this.cycleMsg();
+        console.info('show')
         // 保持屏幕常亮
         wx.setKeepScreenOn({
             keepScreenOn: true
         })
-        
+
         this.setData({
             pageHide: false
         })
-        
+
     },
 
     /**
      * 生命周期函数--监听页面隐藏
      */
     onHide: function () {
+        console.info('hide')
+        clearTimeout(this.data.timer);
         this.setData({
             pageHide: true
         })
@@ -186,6 +190,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
+        console.info('unload')
         this.setData({
             pageHide: true
         })

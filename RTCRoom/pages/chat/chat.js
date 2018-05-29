@@ -6,28 +6,21 @@ Page({
         msgCount: {},
         pageHide: false
     },
-    cycleMsg: function () {
-        setTimeout(function () {
-            var _this = this;
-            _this.setData({
-                msgCount: app.globalData.msgCount
-            })
-
-            // if (!_this.data.pageHide) {
-                _this.cycleMsg();
-            // }
-        }.bind(this), 1000);
-    },
     onLoad: function () {
-        this.cycleMsg();
         this.setData({
             pageHide: false
         })
-        var _this = this;
-        _this.setData({
-            msgCount: app.globalData.msgCount
+    },
+    onUnload: function () {
+        this.setData({
+            pageHide: true
         })
-        
+    },
+    onShow: function () {
+        var _this = this;
+        this.setData({
+            pageHide: false
+        })
         wx.login({
             success: function (res) {
                 wx.request({
@@ -40,17 +33,14 @@ Page({
                 })
             }
         })
-    },
-    onUnload: function () {
-        this.setData({
-            pageHide: true
+        wx.request({
+            url: config.url + '/getFriendTipCount?seqId=' + app.globalData.userInfo.seqId,
+            success: function (res) {
+                _this.setData({
+                    msgCount: res.data.data
+                })
+            }
         })
-    },
-    onShow: function () {
-        this.setData({
-            pageHide: false
-        })
-        
     },
     onHide: function () {
         this.setData({
