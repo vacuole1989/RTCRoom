@@ -1,0 +1,4 @@
+<view class="index-view">
+    <view class="agreeClass" bindtap='onAgreeClick' data-agree="1">同意</view>
+    <view class="cancelClass" bindtap='onAgreeClick' data-agree="-1">取消</view>
+</view>

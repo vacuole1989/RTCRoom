@@ -1,0 +1,27 @@
+.agreeClass {
+    width: 100rpx;
+    height: 100rpx;
+    position: absolute;
+    border-radius: 50rpx;
+    left: calc(50% - 150rpx);
+    top: calc(50% + 100rpx);
+    background-color: #A2E65B;
+    color: black;
+    line-height: 100rpx;
+    font-size: 40rpx;
+    text-align: center;
+}
+
+.cancelClass {
+    width: 100rpx;
+    height: 100rpx;
+    position: absolute;
+    border-radius: 50rpx;
+    left: calc(50% + 50rpx);
+    top: calc(50% + 100rpx);
+    background-color: red;
+    color: black;
+    line-height: 100rpx;
+    font-size: 40rpx;
+    text-align: center;
+}
