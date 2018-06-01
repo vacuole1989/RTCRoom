@@ -108,41 +108,68 @@ Page({
     },
     onHeartBeat: function () {
         console.info('heartbeat');
-        var _this = this;
-        wx.request({
-            url: config.url + '/heartBeat?seqId=' + app.globalData.userInfo.seqId + '&isFriend=' + _this.data.hasFriend,
-            success: function (res) {
-                if (res.data.data.online) {
-                    if (_this.data.stopTime > 0) {
-                        if (!_this.data.hasFriend && res.data.data.friend) {
-                            if (res.data.data.friendly) {
-                                _this.setData({
-                                    hasFriend: true,
-                                    addFriend: '已经是好友'
-                                })
-                            } else {
-                                _this.setData({
-                                    hasFriend: false,
-                                    addFriend: '请求加好友'
-                                })
-                            }
-                        }
 
-                        _this.onShowAskFriend(res);
+        var _this = this;
+        console.info(app.globalData.askUser)
+
+        if (_this.data.fromChat) {
+            wx.request({
+                url: config.url + '/heartBeatChat?seqId=' + app.globalData.askUser.seqId + '&userSeqId=' + app.globalData.userInfo.seqId,
+                success: function (res) {
+                    if (res.data.data.online) {
                         setTimeout(function () {
                             this.onHeartBeat();
                         }.bind(_this), 1000);
-                    }
-                } else {
-                    if (!_this.data.isFinish) {
-                        _this.setData({
-                            isFinish: true
-                        })
-                        wx.navigateBack();
+
+                    } else {
+                        if (!_this.data.isFinish) {
+                            _this.setData({
+                                isFinish: true
+                            })
+                            wx.navigateBack();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            wx.request({
+                url: config.url + '/heartBeat?seqId=' + app.globalData.userInfo.seqId + '&isFriend=' + _this.data.hasFriend,
+                success: function (res) {
+                    if (res.data.data.online) {
+
+                        if (_this.data.stopTime > 0) {
+                            if (!_this.data.hasFriend && res.data.data.friend) {
+                                if (res.data.data.friendly) {
+                                    _this.setData({
+                                        hasFriend: true,
+                                        addFriend: '已经是好友'
+                                    })
+                                } else {
+                                    _this.setData({
+                                        hasFriend: false,
+                                        addFriend: '请求加好友'
+                                    })
+                                }
+                            }
+
+                            _this.onShowAskFriend(res);
+                            setTimeout(function () {
+                                this.onHeartBeat();
+                            }.bind(_this), 1000);
+                        }
+
+
+                    } else {
+                        if (!_this.data.isFinish) {
+                            _this.setData({
+                                isFinish: true
+                            })
+                            wx.navigateBack();
+                        }
+                    }
+                }
+            });
+        }
     },
     onShowAskFriend: function (res) {
         var _this = this;
@@ -187,8 +214,8 @@ Page({
             playUrl: app.globalData.userInfo.playUrl
         });
         _this.onPlayAll();
+        _this.onHeartBeat();
         if (!_this.data.fromChat) {
-            _this.onHeartBeat();
             _this.munTime();
         }
     },
@@ -302,15 +329,28 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
+        console.info(this.data.isFinish);
         console.info("4聊天页面卸载了");
-
+        this.setData({
+            isFinish: true
+        })
         clearTimeout(this.data.timer);
         this.onStopAll();
-        wx.request({
-            url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,
-            success: function (res) {
-            }
-        });
+        if (this.data.fromChat) {
+
+            // wx.request({
+            //     url: config.url + '/closeTalkChat?seqId=' + app.globalData.askUser.seqId,
+            //     success: function (res) {
+            //     }
+            // });
+        } else {
+
+            wx.request({
+                url: config.url + '/closeTalk?seqId=' + app.globalData.userInfo.seqId,
+                success: function (res) {
+                }
+            });
+        }
         wx.setKeepScreenOn({
             keepScreenOn: false,
         });

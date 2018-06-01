@@ -52,6 +52,16 @@ public class FriendController {
         }
         return new JSONResult(true, "查找成功", friends);
     }
+    @RequestMapping("/delFriend")
+    public JSONResult delFriend(@PathVariable String appId, long seqId,long userSeqId) {
+        friendshipRepository.deleteByOwnerSeqIdAndFriendSeqId(seqId,userSeqId,userSeqId,seqId);
+        List<UserInfo> friends = friendshipRepository.findFriends(userSeqId, userSeqId);
+        for (UserInfo friend : friends) {
+            long unReadChatMsgCount = chatMsgRepository.findUnReadChatMsgCount(friend.getSeqId(), userSeqId);
+            friend.setUnRead(unReadChatMsgCount);
+        }
+        return new JSONResult(true, "查找成功", friends);
+    }
 
     @RequestMapping("/getUserInfoById")
     public JSONResult getFriendById(@PathVariable String appId, long seqId) {

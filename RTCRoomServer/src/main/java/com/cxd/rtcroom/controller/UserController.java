@@ -169,44 +169,67 @@ public class UserController {
     }
 
 
-
     @RequestMapping("/sendVideo")
-    public JSONResult getPlayUrl(@PathVariable String appId,@RequestParam long seqId,@RequestParam long userSeqId) {
-        AppTag appTag = appTagRepository.findOne(appId);
-        UserInfo friend = userInfoRepository.findOne(seqId);
+    public JSONResult getPlayUrl(@PathVariable String appId, @RequestParam long seqId, @RequestParam long userSeqId) {
         UserInfo userInfo = userInfoRepository.findOne(userSeqId);
 
-        ChatAsk chatAsk=new ChatAsk();
-        chatAsk.setAgree(false);
+        ChatAsk chatAsk = new ChatAsk();
+        chatAsk.setAgree(0);
         chatAsk.setAskUserSeqId(userSeqId);
         chatAsk.setModifyTime(DateUtil.format(new Date()));
         chatAsk.setNickName(userInfo.getNickName());
-        String playUrl = "rtmp://" + appTag.getPushBizId() + ".liveplay.myqcloud.com/live/" + appTag.getPushBizId() + "_" + friend.getOpenId();
-        chatAsk.setPlayUrl(playUrl);
         chatAsk.setReciveUserId(seqId);
         ChatAsk save = chatAskRepository.save(chatAsk);
 
-        return new JSONResult(true, "在线成功",save);
+        return new JSONResult(true, "在线成功", save);
     }
 
     @RequestMapping("/onCharVideoCycle")
-    public JSONResult onCharVideoCycle(@PathVariable String appId,@RequestParam long seqId) {
+    public JSONResult onCharVideoCycle(@PathVariable String appId, @RequestParam long seqId) {
+        AppTag appTag = appTagRepository.findOne(appId);
+        ChatAsk chatAsk = chatAskRepository.findOne(seqId);
 
+        if (chatAsk.getAgree() == 1) {
+            UserInfo one = userInfoRepository.findOne(chatAsk.getReciveUserId());
+            String playUrl = "rtmp://" + appTag.getPushBizId() + ".liveplay.myqcloud.com/live/" + appTag.getPushBizId() + "_" + one.getOpenId();
 
-        ChatAsk one = chatAskRepository.findOne(seqId);
-        if(one.isAgree()){
+            Map<String, Object> map = new HashMap<>();
+            map.put("playUrl", playUrl);
+            map.put("contactUserInfo", one);
+            map.put("askUser",chatAsk);
+            chatAsk.setAskTime(DateUtil.format(new Date()));
+            chatAskRepository.save(chatAsk);
+            return new JSONResult(true, "在线成功", map);
         }else{
+            chatAsk.setAskTime(DateUtil.format(new Date()));
+            chatAsk.setModifyTime(DateUtil.format(new Date()));
+            chatAskRepository.save(chatAsk);
         }
-
+        return new JSONResult(false, "没有接收", null);
 
     }
 
+    @RequestMapping("/agreeAsk")
+    public JSONResult agreeAsk(@PathVariable String appId, @RequestParam long seqId, int agree) {
+        AppTag appTag = appTagRepository.findOne(appId);
+        ChatAsk chatAsk = chatAskRepository.findOne(seqId);
+
+        chatAsk.setAgree(agree);
+        Map<String, Object> map = new HashMap<>();
+        map.put("askUser",chatAsk);
+        map.put("agree",agree);
+        if (chatAsk.getAgree() == 1) {
+            UserInfo one = userInfoRepository.findOne(chatAsk.getAskUserSeqId());
+            String playUrl = "rtmp://" + appTag.getPushBizId() + ".liveplay.myqcloud.com/live/" + appTag.getPushBizId() + "_" + one.getOpenId();
+            map.put("playUrl", playUrl);
+            map.put("contactUserInfo", one);
+        }
+        chatAsk.setRecTime(DateUtil.format(new Date()));
+        chatAskRepository.save(chatAsk);
+        return new JSONResult(true, "在线成功", map);
 
 
-
-
-
-
+    }
 
 
     @RequestMapping("/online")
@@ -246,13 +269,13 @@ public class UserController {
                 List<FriendshipTip> friendshipTips = friendshipTipRepository.findByUserSeqIdAndFromUserIdAndIread(one.getSeqId(), one.getContactSeqId(), false);
                 if (friendshipTips.size() > 0) {
                     FriendshipTip friendshipTip = friendshipTips.get(0);
-                    if(friendshipTip.isAgree()){
+                    if (friendshipTip.isAgree()) {
                         map.put("friendly", true);
-                    }else{
+                    } else {
                         map.put("friendly", false);
                     }
                     map.put("friend", friendshipTip);
-                }else{
+                } else {
                     map.put("friend", false);
                 }
             }
@@ -261,12 +284,46 @@ public class UserController {
         return new JSONResult(true, "心跳成功", map);
     }
 
+
+
+    @RequestMapping("/heartBeatChat")
+    @Transactional(rollbackOn = Exception.class)
+    public JSONResult heartbeat(@RequestParam long seqId,@RequestParam long userSeqId) {
+        Map<String, Object> map = new HashMap<>();
+        boolean online;
+        ChatAsk chatAsk = chatAskRepository.findOne(seqId);
+        if (Math.abs((int)(DateUtil.format(chatAsk.getAskTime()).getTime()-DateUtil.format(chatAsk.getRecTime()).getTime())/1000)>=2) {
+            online = false;
+        } else {
+            if(userSeqId==chatAsk.getAskUserSeqId()){
+                chatAsk.setAskTime(DateUtil.format(new Date()));
+            }else{
+                chatAsk.setRecTime(DateUtil.format(new Date()));
+            }
+            chatAskRepository.save(chatAsk);
+            online = true;
+        }
+        map.put("online", online);
+        return new JSONResult(true, "心跳成功", map);
+    }
+
+
     @RequestMapping("/closeTalk")
     @Transactional(rollbackOn = Exception.class)
     public JSONResult closeTalk(@RequestParam long seqId) {
         OnlineUser one = onlineUserRepository.findOne(seqId);
         if (null != one) {
             deleteExpireUser(one);
+        }
+        return new JSONResult(true, "删除成功");
+    }
+
+    @RequestMapping("/closeTalkChat")
+    @Transactional(rollbackOn = Exception.class)
+    public JSONResult closeTalkChat(@RequestParam long seqId) {
+        ChatAsk one1 = chatAskRepository.findOne(seqId);
+        if (null != one1) {
+            chatAskRepository.delete(one1);
         }
         return new JSONResult(true, "删除成功");
     }

@@ -6,18 +6,18 @@
             <cover-view class="cover-nickname push-txt">
                 {{contactUserInfo.nickName}}
             </cover-view>
-            <cover-view class="cover-city push-txt">
+            <cover-view class="cover-city push-txt" wx:if="{{!fromChat}}">
                 {{contactUserInfo.country}}●{{contactUserInfo.city}}；{{contactGender}}
             </cover-view>
-            <cover-image src="../Resources/face.png" class="cover-face"></cover-image>
+            <cover-image src="../Resources/face.png" class="cover-face" wx:if="{{!fromChat}}"></cover-image>
             <cover-image src="../Resources/close.png" class="cover-close" bindtap="onCloseTalk"></cover-image>
-            <cover-image src="../Resources/cgift.png" class="cover-gift"></cover-image>
+            <cover-image src="../Resources/cgift.png" class="cover-gift" wx:if="{{!fromChat}}"></cover-image>
 
-            <cover-view class="cover-friends-background"></cover-view>
-            <cover-view wx:if="{{hasFriend}}" class="cover-friends">
+            <cover-view class="cover-friends-background" wx:if="{{!fromChat}}"></cover-view>
+            <cover-view wx:if="{{hasFriend}}" class="cover-friends" wx:if="{{!fromChat}}">
                 {{addFriend}}
             </cover-view>
-            <cover-view wx:if="{{!hasFriend}}" class="cover-friends hasFriend" bindtap='askFriend'>
+            <cover-view wx:if="{{!hasFriend}}" class="cover-friends hasFriend" bindtap='askFriend' wx:if="{{!fromChat}}">
                 {{addFriend}}
             </cover-view>
 

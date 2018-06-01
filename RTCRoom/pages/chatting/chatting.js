@@ -1,9 +1,6 @@
 const app = getApp();
 const config = require('../../config.js');
 const sendAudio = wx.createInnerAudioContext()
-const reciveAudio = wx.createInnerAudioContext()
-sendAudio.src = '/pages/Resources/send.wav'
-reciveAudio.src = '/pages/Resources/recive.wav'
 
 Page({
     data: {
@@ -26,18 +23,25 @@ Page({
     sendVideo:function(){
         var _this=this;
         wx.request({
-            url: config.url +'/getPlayUrl?seqId='+_this.data.friend.seqId,
+            url: config.url +'/sendVideo?seqId='+_this.data.friend.seqId+'&userSeqId='+_this.data.userInfo.seqId,
             success:function(res){
-                app.globalData.userInfo.playUrl = res.data.data;
-                app.globalData.contactUserInfo = _this.data.friend;
-                app.globalData.stopTime = 60;
-                app.globalData.fromChat = true;
-                wx.redirectTo({
-                    url: '../talk/talk',
+                console.info(res);
+                wx.navigateTo({
+                    url: '/pages/asktalk/asktalk?seqId='+res.data.data.seqId
                 })
+                // _this.onCharVideoCycle(res.data.seqId);
             }
         })
         
+    },
+    onCharVideoCycle:function(seqId){
+        var _this = this;
+        wx.request({
+            url: config.url + '/onCharVideoCycle?seqId=' + seqId,
+            success: function (res) {
+
+            }
+        })
     },
     onLoad: function (options) {
         console.info('cload')
@@ -103,7 +107,6 @@ Page({
             success: function (res) {
                 _this.addMsg(res.data.data);
                 _this.clearComment();
-                sendAudio.play();
             }
 
         })
@@ -139,7 +142,6 @@ Page({
                             if (res.data.success) {
                                 for (var i = 0; i < res.data.data.length; i++) {
                                     _this.addMsg(res.data.data[i]);
-                                    reciveAudio.play();
                                 }
                             }
                         },
@@ -162,6 +164,11 @@ Page({
             pageHide: false
         })
 
+    },
+    onReady:function(){
+        wx.pageScrollTo({
+            scrollTop: 100000,
+        })
     },
     onUnload: function () {
         console.info('cunload')

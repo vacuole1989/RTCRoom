@@ -1,9 +1,6 @@
 package com.cxd.rtcroom.bean;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -19,9 +16,13 @@ public class ChatAsk implements Serializable {
     private long askUserSeqId;
     private long reciveUserId;
     private String modifyTime;
-    private boolean agree;
-    private String playUrl;
+    private String askTime;
+    private String recTime;
+    private int agree;
     private String nickName;
+
+    @Transient
+    private String playUrl;
 
     public long getSeqId() {
         return seqId;
@@ -59,12 +60,12 @@ public class ChatAsk implements Serializable {
         return this;
     }
 
-    public boolean isAgree() {
-        return agree;
+    public String getNickName() {
+        return nickName;
     }
 
-    public ChatAsk setAgree(boolean agree) {
-        this.agree = agree;
+    public ChatAsk setNickName(String nickName) {
+        this.nickName = nickName;
         return this;
     }
 
@@ -77,12 +78,30 @@ public class ChatAsk implements Serializable {
         return this;
     }
 
-    public String getNickName() {
-        return nickName;
+    public int getAgree() {
+        return agree;
     }
 
-    public ChatAsk setNickName(String nickName) {
-        this.nickName = nickName;
+    public ChatAsk setAgree(int agree) {
+        this.agree = agree;
+        return this;
+    }
+
+    public String getRecTime() {
+        return recTime;
+    }
+
+    public ChatAsk setRecTime(String recTime) {
+        this.recTime = recTime;
+        return this;
+    }
+
+    public String getAskTime() {
+        return askTime;
+    }
+
+    public ChatAsk setAskTime(String askTime) {
+        this.askTime = askTime;
         return this;
     }
 }

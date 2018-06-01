@@ -16,6 +16,8 @@
     "pages/chatting/chatting",
     "pages/friendask/friendask",
     "pages/talk/talk",
+    "pages/asktalk/asktalk",
+    "pages/talkin/talkin",
     "pages/loading/loading",
     "pages/setting/setting"
   ],

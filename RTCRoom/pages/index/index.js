@@ -62,7 +62,7 @@ Page({
         });
     },
     munTime: function () {
-        this.timer = setTimeout(function () {
+        this.data.timer = setTimeout(function () {
             if (this.data.time > 0) {
                 var tt = this.data.time - 1;
                 this.setData({
@@ -155,30 +155,42 @@ Page({
                             _this.setData({
                                 isAsked: true
                             })
-                            wx.showModal({
-                                title: '提示',
-                                content: '【'+_this.data.msgCount.asked.nickName+'】邀请你视频！',
-                                cancelText: '拒绝',
-                                cancelColor: '#E93027',
-                                confirmText: '同意',
-                                confirmColor: '#00B26A',
-                                success:function(resm){
-                                    if(resm.confirm){
-                                        app.globalData.userInfo.playUrl = _this.data.msgCount.asked.playUrl;
-                                        app.globalData.contactUserInfo = _this.data.friend;
-                                        app.globalData.stopTime = 60;
-                                        app.globalData.fromChat = true;
-                                        wx.navigateTo({
-                                            url: '../talk/talk',
-                                        })
-                                    }else{
 
-                                    }
-                                },
-                                complete:function(res){
-                                    
-                                }
-                            }) 
+                            
+
+
+                            wx.navigateTo({
+                                url: '/pages/talkin/talkin?seqId=' + _this.data.msgCount.asked.seqId
+                            })
+
+
+
+
+
+                            // wx.showModal({
+                            //     title: '提示',
+                            //     content: '【'+_this.data.msgCount.asked.nickName+'】邀请你视频！',
+                            //     cancelText: '拒绝',
+                            //     cancelColor: '#E93027',
+                            //     confirmText: '同意',
+                            //     confirmColor: '#00B26A',
+                            //     success:function(resm){
+                            //         if(resm.confirm){
+                            //             app.globalData.userInfo.playUrl = _this.data.msgCount.asked.playUrl;
+                            //             app.globalData.contactUserInfo = _this.data.friend;
+                            //             app.globalData.stopTime = 60;
+                            //             app.globalData.fromChat = true;
+                            //             wx.navigateTo({
+                            //                 url: '../talk/talk',
+                            //             })
+                            //         }else{
+
+                            //         }
+                            //     },
+                            //     complete:function(res){
+
+                            //     }
+                            // }) 
                         }
                     }
                 },
