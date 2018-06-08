@@ -23,9 +23,8 @@ public class OnlineUser implements Serializable {
     @NotNull
     private String contactOpenId;
     @NotNull
-    private String lastFlushTime;
-    @NotNull
-    private String expireTime;
+    private long expireTime;
+
 
     public long getSeqId() {
         return seqId;
@@ -45,14 +44,6 @@ public class OnlineUser implements Serializable {
         return this;
     }
 
-    public String getLastFlushTime() {
-        return lastFlushTime;
-    }
-
-    public OnlineUser setLastFlushTime(String lastFlushTime) {
-        this.lastFlushTime = lastFlushTime;
-        return this;
-    }
 
     public long getContactSeqId() {
         return contactSeqId;
@@ -63,12 +54,13 @@ public class OnlineUser implements Serializable {
         return this;
     }
 
-    public String getExpireTime() {
+    public long getExpireTime() {
         return expireTime;
     }
 
-    public OnlineUser setExpireTime(String expireTime) {
+    public OnlineUser setExpireTime(long expireTime) {
         this.expireTime = expireTime;
         return this;
     }
+
 }

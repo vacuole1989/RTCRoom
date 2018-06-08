@@ -2,14 +2,7 @@
   "pages": [
     "pages/welcome/welcome",
     "pages/initpage/initpage",
-    "pages/article/article",
-    "pages/newarticle/newarticle",
-    "pages/articledetail/articledetail",
     "pages/person/person",
-    "pages/persondetail/persondetail",
-    "pages/video/video",
-    "pages/videolist/videolist",
-    "pages/videodetail/videodetail",
     "pages/index/index",
     "pages/search/search",
     "pages/chat/chat",
@@ -19,17 +12,13 @@
     "pages/asktalk/asktalk",
     "pages/talkin/talkin",
     "pages/loading/loading",
+    "pages/buy/buy",
     "pages/setting/setting"
   ],
   "networkTimeout": {
     "request": 60000
   },
   "window": {
-    "backgroundColor": "#888",
-    "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#000",
-    "navigationBarTitleText": "无介时代",
-    "navigationBarTextStyle": "#fff"
-    
+    "navigationBarTitleText": "无介时代"
   }
 }

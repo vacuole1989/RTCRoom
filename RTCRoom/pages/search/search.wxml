@@ -1,72 +1,32 @@
-<view>
-  <input class='search' bindfocus="onFocus"></input>
-  <image class="search-icon" src="../Resources/search.png"></image>
-  <image class="clear-icon" src="../Resources/clear.png" wx:if="{{inputFocus}}" bindtap='unFocus'></image>
-</view>
-<view wx:if="{{!inputFocus}}">
-<view class="order">
-  <span style="white-space:pre;"></span>
-  <span class="line"></span>
-  <span style="white-space:pre;"></span>
-  <span class="txt">人群筛选</span>
-  <span style="white-space:pre;"></span>
-  <span class="line"></span>
-</view>
-<scroll-view scroll-x="true" style=" white-space: nowrap; display: flex">
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>所有人</view>
-    <view>免费</view>
-  </view>
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>男生</view>
-    <view>2钻石/次</view>
-  </view>
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>女生</view>
-    <view>2钻石/次</view>
-  </view>
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>同志</view>
-    <view>免费</view>
-  </view>
-</scroll-view>
-<view class="order">
-  <span style="white-space:pre;"></span>
-  <span class="line"></span>
-  <span style="white-space:pre;"></span>
-  <span class="txt">特殊玩法</span>
-  <span style="white-space:pre;"></span>
-  <span class="line"></span>
-</view>
-<scroll-view scroll-x="true" scroll-with-animation="true" style=" white-space: nowrap; display: flex-column">
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>女神来了</view>
-    <view>15钻石/分钟</view>
-  </view>
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>CP速配</view>
-    <view>免费</view>
-  </view>
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>心愿单</view>
-    <view>15钻石/次</view>
-  </view>
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>找人开黑</view>
-    <view>免费</view>
-  </view>
-  <view class="choose-block">
-    <image src='../Resources/person.png'></image>
-    <view>女神陪玩</view>
-    <view>5钻石/分钟</view>
-  </view>
-</scroll-view>
+<view class="mainbox">
+    <view class="order">
+        <span style="white-space:pre;"></span>
+        <span class="line"></span>
+        <span style="white-space:pre;"></span>
+        <span class="txt">人群筛选</span>
+        <span style="white-space:pre;"></span>
+        <span class="line"></span>
+    </view>
+
+    <view bindtap='onAllSearch'  class="choose-block">
+        <image src='../Resources/person.png'></image>
+        <view>所有人</view>
+        <view>免费</view>
+    </view>
+    <view bindtap='onBoySearch'  class="choose-block">
+        <image src='../Resources/boy.png'></image>
+        <view>男生</view>
+        <view>2钻石/次</view>
+    </view>
+    <view bindtap='onGirlSearch'  class="choose-block">
+        <image src='../Resources/girl.png'></image>
+        <view>女生</view>
+        <view>2钻石/次</view>
+    </view>
+    <view bindtap='onCitySearch' class="choose-block">
+        <image src='../Resources/city.png'></image>
+        <view>同城</view>
+        <view>免费</view>
+    </view>
+
 </view>

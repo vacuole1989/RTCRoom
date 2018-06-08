@@ -16,15 +16,18 @@ public class UserInfo implements Serializable {
     private String sessionKey;
     private String nickName;
     private String avatarUrl;
-    private String gender;
+    private int gender=0;
     private String province;
     private String city;
     private String country;
     private String lastLoginTime;
-    private String onlineStatusTime;
+    private long onlineStatusTime;
 
     private boolean inited;
     private boolean online;
+    private int totalDiamond=0;
+
+    private int askGender=0;
 
     @Transient
     private String pushUrl;
@@ -32,6 +35,8 @@ public class UserInfo implements Serializable {
     private String playUrl;
     @Transient
     private long unRead;
+
+
 
     public long getSeqId() {
         return seqId;
@@ -78,14 +83,6 @@ public class UserInfo implements Serializable {
         return this;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public UserInfo setGender(String gender) {
-        this.gender = gender;
-        return this;
-    }
 
     public String getProvince() {
         return province;
@@ -159,22 +156,48 @@ public class UserInfo implements Serializable {
         return this;
     }
 
-    public String getOnlineStatusTime() {
-        return onlineStatusTime;
-    }
-
-    public UserInfo setOnlineStatusTime(String onlineStatusTime) {
-        this.onlineStatusTime = onlineStatusTime;
-        return this;
-    }
-
-
     public long getUnRead() {
         return unRead;
     }
 
     public UserInfo setUnRead(long unRead) {
         this.unRead = unRead;
+        return this;
+    }
+
+    public long getOnlineStatusTime() {
+        return onlineStatusTime;
+    }
+
+    public UserInfo setOnlineStatusTime(long onlineStatusTime) {
+        this.onlineStatusTime = onlineStatusTime;
+        return this;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public UserInfo setGender(int gender) {
+        this.gender = gender;
+        return this;
+    }
+
+    public int getTotalDiamond() {
+        return totalDiamond;
+    }
+
+    public UserInfo setTotalDiamond(int totalDiamond) {
+        this.totalDiamond = totalDiamond;
+        return this;
+    }
+
+    public int getAskGender() {
+        return askGender;
+    }
+
+    public UserInfo setAskGender(int askGender) {
+        this.askGender = askGender;
         return this;
     }
 }

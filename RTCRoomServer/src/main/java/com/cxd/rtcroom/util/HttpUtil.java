@@ -26,7 +26,7 @@ public class HttpUtil {
         try {
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             PathUtil.getInstance().getWebRootPath();
-            FileInputStream instream = new FileInputStream(new File("/" + PathUtil.getInstance().getWebRootPath() + "/" + mchId + ".p12"));
+            FileInputStream instream = new FileInputStream(new File("/" + PathUtil.getInstance().getWebRootPath() + "/WEB-INF/" + mchId + ".p12"));
             try {
                 keyStore.load(instream, mchId.toCharArray());
             } finally {

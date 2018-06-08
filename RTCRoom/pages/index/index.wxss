@@ -54,11 +54,12 @@
     height: 90rpx;
     right: 40rpx;
     bottom: 20rpx;
+    border-radius: 45rpx;
 }
 
 .cover-input {
     position: relative;
-    width: 65%;
+    width: 90%;
     height: 80rpx;
     border: 4rpx solid #fff;
     border-radius: 40rpx;

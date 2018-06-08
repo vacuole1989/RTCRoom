@@ -18,22 +18,4 @@
             <view data-index="{{index}}" bindtap="delItem" class="inner del">删除</view>
         </view>
     </view>
-
-    <!-- <view wx:for="{{friends}}" wx:key="seqId" >
-        <navigator bindtouchstart="touchS" bindtouchmove="touchM" style="{{item.txtStyle}}" bindtouchend="touchE" class="chat-item flex-wrp" url='/pages/chatting/chatting?seqId={{item.seqId}}' data-index="{{index}}">
-
-            <view class="avatar flex-item">
-                <image src="{{item.avatarUrl}}"></image>
-            </view>
-            <view class="chat-content flex-item">
-                <view class="chat-source">
-                    <text class="chatmate">{{item.nickName}}</text>
-                </view>
-                <text class="chat-txt">已经成为好友</text>
-            </view>
-            <view class="msgTip" wx:if="{{item.unRead>0}}">{{item.unRead}}</view>
-
-        </navigator>
-        <view data-index="{{index}}" bindtap="delItem" class="inner del">删除</view>
-    </view> -->
 </view>

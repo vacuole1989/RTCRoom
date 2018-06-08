@@ -33,6 +33,11 @@ public class ChatMsg implements Serializable {
      */
     private boolean iread;
 
+    /**
+     * 0是普通消息，1是礼物消息
+     */
+    private int itype=0;
+
     public long getSeqId() {
         return seqId;
     }
@@ -84,6 +89,15 @@ public class ChatMsg implements Serializable {
 
     public ChatMsg setIread(boolean iread) {
         this.iread = iread;
+        return this;
+    }
+
+    public int getItype() {
+        return itype;
+    }
+
+    public ChatMsg setItype(int itype) {
+        this.itype = itype;
         return this;
     }
 }

@@ -11,7 +11,8 @@ Page({
         userInfo: {},
         showText: '',
         color: [],
-        timer:null
+        timer:null,
+        itype:'all'
     },
     munTime: function () {
         this.timer = setTimeout(function () {
@@ -25,10 +26,10 @@ Page({
         }.bind(this), 1000);
     },
     getOnlinePerson: function () {
-        var _this = this;
+        var _this = this;    
         wx.request({
             method: 'POST',
-            url: config.url + '/onlineUser?seqId=' + app.globalData.userInfo.seqId,
+            url: config.url + '/onlineUser?seqId=' + app.globalData.userInfo.seqId+'&type='+_this.data.itype,
             success: function (res) {
                 if (res.data.success) {
                     if (_this.data.time > 0) {
@@ -81,7 +82,8 @@ Page({
     onLoad: function (options) {
         var _this = this;
         _this.setData({
-            userInfo: app.globalData.userInfo
+            userInfo: app.globalData.userInfo,
+            itype:options.type
         })
         var animation = wx.createAnimation({
             duration: 1000,

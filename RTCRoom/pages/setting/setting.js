@@ -1,4 +1,4 @@
-// pages/setting/setting.js
+// pages/persondetail/persondetail.js
 const app = getApp();
 var config = require('../../config.js');
 Page({
@@ -7,22 +7,38 @@ Page({
      * 页面的初始数据
      */
     data: {
-        
+        userInfo: {},
+        hasUserInfo: false
     },
-    onPersonDetail:function(){
-        wx.navigateTo({
-            url: '/pages/persondetail/persondetail',
-        })
-    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-      
         wx.setNavigationBarTitle({
-            title: '设置',
+            title: '个人资料编辑',
         })
-        
+        var _this = this;
+        if (app.globalData.userInfo) {
+            this.setData({
+                userInfo: app.globalData.userInfo,
+                hasUserInfo: true
+            })
+            console.info(_this.data.userInfo)
+        } else {
+            // 在没有 open-type=getUserInfo 版本的兼容处理
+            wx.getUserInfo({
+                success: res => {
+                    app.globalData.userInfo = res.userInfo
+                    this.setData({
+                        userInfo: res.userInfo,
+                        hasUserInfo: true
+                    })
+
+                }
+            })
+        }
+
     },
 
     /**

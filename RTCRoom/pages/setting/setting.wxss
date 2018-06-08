@@ -23,3 +23,11 @@
     margin-top: 20rpx;
     right: 40rpx;
 }
+.itemList .item span {
+    position: absolute;
+    right: 100rpx;
+    color: #ccc;
+}
+.avatarUrl{
+    border-radius: 50%
+}

@@ -44,72 +44,6 @@ Page({
             url: "../loading/loading",
         });
     },
-    onTalkClick2: function () {
-        var _this = this;
-        wx.request({
-            url: config.url + '/online?seqId=' + app.globalData.userInfo.seqId,
-            success: function (res) {
-                _this.setData({
-                    time: 20
-                });
-                wx.showLoading({
-                    title: '匹配中…' + _this.data.time,
-                    mask: true
-                });
-                _this.munTime();
-                _this.getOnlinePerson();
-            }
-        });
-    },
-    munTime: function () {
-        this.data.timer = setTimeout(function () {
-            if (this.data.time > 0) {
-                var tt = this.data.time - 1;
-                this.setData({
-                    time: tt
-                });
-                this.munTime();
-            }
-        }.bind(this), 1000);
-    },
-    getOnlinePerson: function () {
-        var _this = this;
-        wx.request({
-            method: 'POST',
-            url: config.url + '/onlineUser?seqId=' + app.globalData.userInfo.seqId,
-            success: function (res) {
-                wx.showLoading({
-                    title: '匹配中…' + _this.data.time,
-                    mask: true
-                });
-                if (res.data.success) {
-                    wx.hideLoading();
-                    if (_this.data.time > 0) {
-                        _this.setData({
-                            time: 0
-                        });
-                        app.globalData.userInfo.playUrl = res.data.data.playUrl;
-                        app.globalData.contactUserInfo = res.data.data.contactUserInfo;
-                        app.globalData.stopTime = res.data.data.stopTime;
-                        wx.redirectTo({
-                            url: '../talk/talk',
-                        })
-                    } else {
-                        _this.onOffOnline();
-                    }
-                } else {
-                    if (_this.data.time > 0) {
-                        setTimeout(function () {
-                            this.getOnlinePerson();
-                        }.bind(_this), 1000);
-                    } else {
-                        wx.hideLoading();
-                        _this.onOffOnline();
-                    }
-                }
-            }
-        })
-    },
     onOffOnline: function () {
         wx.request({
             url: config.url + '/offline?seqId=' + app.globalData.userInfo.seqId,
@@ -118,9 +52,6 @@ Page({
             }
         });
     },
-    /**
-     * 生命周期函数--监听页面加载
-     */
     onLoad: function (options) {
         console.info('load')
         var _this = this;
@@ -129,15 +60,6 @@ Page({
         })
         this.setData({
             pageHide: false
-        })
-    },
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function () {
-        console.info('ready')
-        wx.setKeepScreenOn({
-            keepScreenOn: true,
         })
     },
     cycleMsg: function () {
@@ -156,41 +78,9 @@ Page({
                                 isAsked: true
                             })
 
-                            
-
-
                             wx.navigateTo({
                                 url: '/pages/talkin/talkin?seqId=' + _this.data.msgCount.asked.seqId
                             })
-
-
-
-
-
-                            // wx.showModal({
-                            //     title: '提示',
-                            //     content: '【'+_this.data.msgCount.asked.nickName+'】邀请你视频！',
-                            //     cancelText: '拒绝',
-                            //     cancelColor: '#E93027',
-                            //     confirmText: '同意',
-                            //     confirmColor: '#00B26A',
-                            //     success:function(resm){
-                            //         if(resm.confirm){
-                            //             app.globalData.userInfo.playUrl = _this.data.msgCount.asked.playUrl;
-                            //             app.globalData.contactUserInfo = _this.data.friend;
-                            //             app.globalData.stopTime = 60;
-                            //             app.globalData.fromChat = true;
-                            //             wx.navigateTo({
-                            //                 url: '../talk/talk',
-                            //             })
-                            //         }else{
-
-                            //         }
-                            //     },
-                            //     complete:function(res){
-
-                            //     }
-                            // }) 
                         }
                     }
                 },
@@ -200,7 +90,7 @@ Page({
                     }
                 }
             })
-        }.bind(this), 1000);
+        }.bind(this), 2000);
     },
     /**
      * 生命周期函数--监听页面显示

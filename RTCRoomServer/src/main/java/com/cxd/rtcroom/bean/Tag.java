@@ -24,6 +24,7 @@ public class Tag implements Serializable {
      */
     private int type;
 
+
     public String getName() {
         return name;
     }

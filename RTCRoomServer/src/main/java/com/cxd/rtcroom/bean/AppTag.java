@@ -17,6 +17,9 @@ public class AppTag implements Serializable {
     private String pushKey;
     private String pushBizId;
     private String appTemplate;
+    private String mchId;
+    private String apiKey;
+    private String payDesc;
 
     public String getAppId() {
         return appId;
@@ -60,6 +63,33 @@ public class AppTag implements Serializable {
 
     public AppTag setAppTemplate(String appTemplate) {
         this.appTemplate = appTemplate;
+        return this;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public AppTag setMchId(String mchId) {
+        this.mchId = mchId;
+        return this;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public AppTag setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+        return this;
+    }
+
+    public String getPayDesc() {
+        return payDesc;
+    }
+
+    public AppTag setPayDesc(String payDesc) {
+        this.payDesc = payDesc;
         return this;
     }
 }

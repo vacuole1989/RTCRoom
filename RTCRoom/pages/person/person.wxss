@@ -1,10 +1,10 @@
 page {
-    background-color: gray;
+    background-color: #fff;
 }
 
 .person-view {
     text-align: center;
-    color: white;
+    color: #000;
 }
 
 .headImg {
@@ -26,23 +26,23 @@ page {
 }
 
 .list-item {
-    padding: 0 100rpx;
-    color: white;
-    line-height: 50rpx;
+    margin: 0 100rpx;
+    color: #000;
+    line-height: 120rpx;
     vertical-align: middle;
+    height: 120rpx;
+    font-size: 40rpx;
+    border-bottom: 2rpx solid #ccc;
+    position: relative;
 }
 
 .list-item span {
-    font-size: 40rpx;
-    line-height: 50rpx;
-    height: 50rpx;
-    margin-top: 20rpx;
-    position: absolute;
+    margin-left: 50rpx;
 }
 
 .mansym {
     width: 50rpx;
     height: 50rpx;
-    margin-right: 20rpx;
-    margin-top: 20rpx;
+    position: absolute;
+    top: calc(50% - 25rpx);
 }

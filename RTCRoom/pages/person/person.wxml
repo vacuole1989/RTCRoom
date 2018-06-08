@@ -8,38 +8,19 @@
         <block wx:if="{{userInfo.gender==2}}">
             <image class='mansym' src='../Resources/woman.png'></image>
         </block>
-
     </view>
-
-    <view>无介号：{{userInfo.seqId}}</view>
 </view>
 <view class="textli">
-    <view class="list-item">
-        <image class='mansym' src='../Resources/diamond.png'></image>
+    <view class="list-item" style='border-top: 2rpx solid #ccc;' bindtap='onBuyTap'>
+        <image class='mansym' src='../Resources/arrow-right.png'></image>
         <span>购买钻石</span>
     </view>
     <view class="list-item">
-        <image class='mansym' src='../Resources/money.png'></image>
-        <span>我的收益</span>
-    </view>
-    <view class="list-item">
-        <image class='mansym' src='../Resources/gift.png'></image>
-        <span>礼品福利社</span>
-    </view>
-    <view class="list-item">
-        <image class='mansym' src='../Resources/invite.png'></image>
-        <span>邀请好友送钻石</span>
-    </view>
-    <view class="list-item">
-        <image class='mansym' src='../Resources/invite.png'></image>
-        <span>邀请码/优惠码兑换</span>
+        <image class='mansym' src='../Resources/arrow-right.png'></image>
+        <span>钻石余额</span>
     </view>
     <view class="list-item" bindtap='onSettingTap'>
-        <image class='mansym' src='../Resources/setting.png'></image>
-        <span>系统设置</span>
-    </view>
-    <view class="list-item">
-        <image class='mansym' src='../Resources/question.png'></image>
-        <span>常见问题</span>
+        <image class='mansym' src='../Resources/arrow-right.png'></image>
+        <span>个人信息</span>
     </view>
 </view>

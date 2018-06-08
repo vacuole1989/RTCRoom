@@ -1,76 +1,78 @@
-// pages/search/search.js
+const app = getApp();
+const config = require('../../config.js');
 Page({
+    data: {
+        userInfo: {}
+    },
+    onAllSearch: function (e) {
+        wx.redirectTo({
+            url: '/pages/loading/loading?type=all',
+        })
 
-  /**
-   * 页面的初始数据
-   */
-  data: {
-    inputFocus: false
-  },
-  onFocus: function (event){
-      this.setData({
-        inputFocus:true
-      });
-  },
-  unFocus: function (event){
+    },
+    onBoySearch: function (e) {
+        var _this = this;
+        wx.showModal({
+            title: '提示',
+            content: '是否花费2钻石搜索男生',
+            success: function (res) {
+                if (res.confirm) {
+                    _this.payDiamond('boy');
+                }
+            }
+        });
 
-      this.setData({
-        inputFocus:false
-      });
-  },
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
 
-  },
+    },
+    onGirlSearch: function (e) {
+        var _this = this;
+        wx.showModal({
+            title: '提示',
+            content: '是否花费2钻石搜索女生',
+            success: function (res) {
+                if (res.confirm) {
+                    _this.payDiamond('girl');
+                }
+            }
+        });
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
 
-  },
+    },
+    onCitySearch: function (e) {
+        wx.redirectTo({
+            url: '/pages/loading/loading?type=city',
+        })
+    },
+    payDiamond: function (itype) {
+        var _this=this;
+        wx.request({
+            url: config.url + '/payDiamond?itype=' + itype+'&seqId='+_this.data.userInfo.seqId,
+            success: function (res) {
+                if (res.data.success) {
+                    wx.redirectTo({
+                        url: '/pages/loading/loading?type=' + itype,
+                    })
+                } else {
+                    _this.showAlert('提示', res.data.message);
+                }
+            }
+        })
+    },
+    showAlert: function (title, text) {
+        wx.showModal({
+            title: title,
+            content: text,
+            showCancel: false,
+            confirmText: '知道了',
+            success: function (res) {
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
+            }
+        });
+    },
+    onLoad: function (options) {
+        var _this = this;
+        _this.setData({
+            userInfo: app.globalData.userInfo
+        })
+    }
 })
