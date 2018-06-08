@@ -1,0 +1,12 @@
+<view class="main">
+    <view class="title-txt">我的钻石</view>
+    <view class="title-num">{{diamondNum}}</view>
+
+    <block wx:for="{{btns}}" wx:key="cny">
+        <view bindtap='onChooseBtn' data-idx="{{index}}" class="choose-block {{item.diamond==selected.diamond?'active':''}}">
+            <view>{{item.diamond}}钻石</view>
+            <view>￥{{item.cny}}</view>
+        </view>
+    </block>
+    <button class="buybtn" bindtap='onBuyBtn'>立即购买</button>
+</view>
